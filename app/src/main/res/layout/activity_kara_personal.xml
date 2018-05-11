@@ -36,6 +36,6 @@
         android:layout_alignParentRight="true"
         android:layout_margin="10dp"
         android:visibility="invisible"
-        custom:donut_finished_color="@color/colorPrimary"/>
+        custom:donut_finished_color="@color/colorKara"/>
 
 </RelativeLayout>

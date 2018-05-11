@@ -96,7 +96,7 @@ public class SearchBeatDialog extends DialogFragment implements View.OnClickList
             @Override
             public void onItemClickListener(View view, BeatInfo beatInfo) {
                 isSearch = false;
-                searchSongListener.onSelectedSong(beatInfo);
+                searchSongListener.onSongSelected(beatInfo);
                 dismiss();
             }
         });
@@ -169,6 +169,6 @@ public class SearchBeatDialog extends DialogFragment implements View.OnClickList
     }
 
     public interface SearchSongListener {
-        void onSelectedSong(BeatInfo beatInfo);
+        void onSongSelected(BeatInfo beatInfo);
     }
 }

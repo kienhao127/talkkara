@@ -1,5 +1,6 @@
 package jery.kara.manager;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.media.MediaPlayer;
@@ -24,17 +25,12 @@ import jery.kara.searchbeat.SearchBeatDialog;
  * Created by CPU11341-local on 27-Apr-18.
  */
 
-public class KaraManager {
-
-    static final int STATE_NONE = 1;
-    static final int STATE_DOWNLOADING = 2;
-    static final int STATE_PLAYING = 3;
+public abstract class KaraManager {
 
     LyricView lyricView;
     MediaPlayer mediaPlayer;
     Lyric lyric;
 
-    int state = STATE_NONE;
     int indexOfTime;
     long currentTime;
     int beatDuration = 1;
@@ -48,6 +44,13 @@ public class KaraManager {
     int tone = 2;
     boolean isWhatUHearChecked = true;
 
+    protected abstract void downloadSongStart();
+    protected abstract void downloadSongProgress(int iProgress);
+    protected abstract void downloadSongSuccess(BeatInfo beatInfo);
+    protected abstract void downloadSongError();
+    protected abstract void onCancelDownload();
+    protected abstract void onBeatPlaying(int playingProgress);
+    protected abstract void onBeatStop();
 
     public void setLyricView(LyricView lyricView) {
         this.lyricView = lyricView;
@@ -56,39 +59,18 @@ public class KaraManager {
         this.context = context;
     }
 
-    private static KaraManager instance;
-    private KaraManager(){}
-    public static KaraManager getInstance(){
-        if (instance == null){
-            instance = new KaraManager();
-        }
-        return instance;
-    }
-
-    public void onControlViewClick(){
-        if (state == STATE_NONE){
-            showSearchSong();
-        }
-        if (state == STATE_PLAYING){
-            showSongAction();
-        }
-    }
-
-    void showSearchSong(){
+    protected void showSearchDailog(){
         SearchBeatDialog searchBeatDialog = new SearchBeatDialog();
         searchBeatDialog.setSearchSongListener(new SearchBeatDialog.SearchSongListener() {
             @Override
-            public void onSelectedSong(BeatInfo beatInfo) {
-                state = STATE_DOWNLOADING;
-                onStateChangeLister.onStateChange(state);
+            public void onSongSelected(BeatInfo beatInfo) {
                 downloadFile(beatInfo);
             }
         });
-        searchBeatDialog.show(((KaraPersonalActivity) context).getFragmentManager(), "searchBeatDialog");
-
+        searchBeatDialog.show(((Activity) context).getFragmentManager(), "searchBeatDialog");
     }
 
-    void showSongAction(){
+    protected void showSettingDialog(){
         SettingKaraDialog settingKaraDialog = new SettingKaraDialog();
         settingKaraDialog.beatVolume = beatVol;
         settingKaraDialog.micVolume = micVol;
@@ -116,18 +98,23 @@ public class KaraManager {
 
             @Override
             public void onSwitchWhatUHearChange(boolean b) {
-                Log.d("Echo:", String.valueOf(b));
+                Log.d("What U Hear:", String.valueOf(b));
                 isWhatUHearChecked = b;
             }
+
+            @Override
+            public void onButtonStopClicked() {
+                onActionStopSong();
+            }
         });
-        settingKaraDialog.show(((KaraPersonalActivity) context).getFragmentManager(), "settingKaraDialog");
+        settingKaraDialog.show(((Activity) context).getFragmentManager(), "settingKaraDialog");
     }
 
     public void onActionStopSong(){
         stopSync();
     }
 
-    void prepareLyric(String lyricLocalPath){
+    protected void prepareLyric(String lyricLocalPath){
         lyric = LyricUtils.parseLyric(new File(lyricLocalPath), "UTF-8");
         lyricView.start();
         lyricView.receiveNewContent("--- *** ---", 500);
@@ -135,7 +122,7 @@ public class KaraManager {
         indexOfTime++;
     }
 
-    void prepareBeat(String beatLocalPath){
+    protected void prepareBeat(String beatLocalPath){
         try {
             mediaPlayer = new MediaPlayer();
             mediaPlayer.setDataSource(beatLocalPath);
@@ -147,7 +134,7 @@ public class KaraManager {
 
     }
 
-    void startSync(){
+    protected void startSync(){
         currentTime = 0;
         indexOfTime = 0;
         beatDuration = mediaPlayer.getDuration();
@@ -156,15 +143,14 @@ public class KaraManager {
         handler.postDelayed(runnable, 50);
     }
 
-    void stopSync(){
+    protected void stopSync(){
         if (handler != null) {
             handler.removeCallbacks(runnable);
             handler = null;
             mediaPlayer.pause();
             mediaPlayer.stop();
             mediaPlayer.release();
-            state = STATE_NONE;
-            onStateChangeLister.onStateChange(state);
+            onBeatStop();
             lyricView.stop();
         }
     }
@@ -181,7 +167,7 @@ public class KaraManager {
     void doSync(){
         currentTime = mediaPlayer.getCurrentPosition();
         float playingProgress = currentTime*100/beatDuration;
-        onProgressChangeListener.onProgressChange((int)playingProgress);
+        onBeatPlaying((int)playingProgress);
         if (indexOfTime < lyric.getArrSentences().size()){
             long lrcTime = lyric.getArrSentences().get(indexOfTime).getFromTime();
             if (currentTime >= lrcTime){
@@ -202,29 +188,23 @@ public class KaraManager {
         tKaraDownloader.setDownLoadSongResourceListener(new TKaraDownloader.DownLoadSongResourceListener() {
             @Override
             public void onDownloadSongResoureStart() {
+                downloadSongStart();
             }
 
             @Override
             public void onDownloadSongProgress(int iProgress) {
-                if (iProgress!=0){
-                    onProgressChangeListener.onProgressChange(iProgress);
-                }
+                downloadSongProgress(iProgress);
             }
 
             @Override
             public void onDownloadSongResourceError(String error) {
-                state = STATE_NONE;
-                onStateChangeLister.onStateChange(state);
+                downloadSongError();
                 showAlertDialog();
             }
 
             @Override
             public void onDownloadSongResourceSuccess() {
-                state = STATE_PLAYING;
-                onStateChangeLister.onStateChange(state);
-                prepareBeat(beatInfo.beatLocalPath);
-                prepareLyric(beatInfo.lyricLocalPath);
-                startSync();
+                downloadSongSuccess(beatInfo);
             }
         });
 
@@ -264,23 +244,6 @@ public class KaraManager {
         if (tKaraDownloader != null) {
             tKaraDownloader.cancle();
         }
-        state = STATE_NONE;
-    }
-
-    public interface OnStateChangeLister{
-        void onStateChange(int state);
-    }
-    private OnStateChangeLister onStateChangeLister;
-    public void setOnStateChangeLister(OnStateChangeLister onStateChangeLister) {
-        this.onStateChangeLister = onStateChangeLister;
-    }
-
-
-    public interface OnProgressChangeListener{
-        void onProgressChange(int iProgress);
-    }
-    private OnProgressChangeListener onProgressChangeListener;
-    public void setOnProgressChangeListener(OnProgressChangeListener onProgressChangeListener) {
-        this.onProgressChangeListener = onProgressChangeListener;
+        onCancelDownload();
     }
 }

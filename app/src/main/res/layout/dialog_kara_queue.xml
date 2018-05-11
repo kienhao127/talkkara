@@ -34,10 +34,11 @@
         android:background="@drawable/radius_choosesong_background"
         android:gravity="center"
         android:text="Chọn bài hát"
+        android:textSize="17dp"
         android:textColor="#FFF"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
         android:layout_marginBottom="10dp"/>
 
 </RelativeLayout>

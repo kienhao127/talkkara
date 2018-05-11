@@ -14,6 +14,7 @@ import jery.kara.karaqueue.fragment.KaraQueueDialog;
 import jery.kara.karaqueue.model.User;
 import jery.kara.karaqueue.myview.PulsatorLayout;
 import jery.kara.lyric.myview.LyricView;
+import jery.kara.manager.KaraManager;
 import jery.kara.searchbeat.BeatInfo;
 import jery.kara.searchbeat.SearchBeatDialog;
 
@@ -21,9 +22,7 @@ import jery.kara.searchbeat.SearchBeatDialog;
  * Created by CPU11341-local on 08-May-18.
  */
 
-public class KaraQueueManager {
-    LyricView lyricView;
-    Context context;
+public class KaraQueueManager extends KaraManager {
     List<User> queueData = new ArrayList<>();
     User currentUser = new User();
 
@@ -46,14 +45,6 @@ public class KaraQueueManager {
         return queueData;
     }
 
-    public void setContext(Context context) {
-        this.context = context;
-    }
-
-    public void setLyricView(LyricView lyricView) {
-        this.lyricView = lyricView;
-    }
-
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
     }
@@ -62,17 +53,71 @@ public class KaraQueueManager {
         return currentUser;
     }
 
-    public List<User> joinToQueue(BeatInfo beatInfo){
+
+    @Override
+    protected void downloadSongStart() {
+
+    }
+
+    @Override
+    protected void downloadSongProgress(int iProgress) {
+
+    }
+
+    @Override
+    protected void downloadSongSuccess(BeatInfo beatInfo) {
+        joinToQueue(beatInfo);
+    }
+
+    @Override
+    protected void downloadSongError() {
+
+    }
+
+    @Override
+    protected void onCancelDownload() {
+
+    }
+
+    @Override
+    protected void onBeatPlaying(int playingProgress) {
+
+    }
+
+    @Override
+    protected void onBeatStop() {
+
+    }
+
+    public void onChooseSongClicked(){
+        switch (currentUser.type){
+            case User.TYPE_VIWER:
+                showSearchDailog();
+                break;
+            case User.TYPE_MANAGER:
+                break;
+            case User.TYPE_SINGER:
+            case User.TYPE_WAITTING:
+                removeFromQueue(currentUser.id);
+                break;
+        }
+    }
+
+    public void joinToQueue(BeatInfo beatInfo){
         //Thêm vào hàng đợi
-        return queueData;
+        onQueueChangeListener.onQueueChange();
     }
 
-    public List<User> removeFromQueue(int userID){
+    public void removeFromQueue(int userID){
         //Xóa khỏi hàng đợi
-        return queueData;
+        onQueueChangeListener.onQueueChange();
     }
 
-    public void downloadFile(BeatInfo beatInfo){
-        //Download beat & lyric
+    private OnQueueChangeListener onQueueChangeListener;
+    public interface OnQueueChangeListener{
+        void onQueueChange();
+    }
+    public void setOnQueueChangeListener(OnQueueChangeListener onQueueChangeListener) {
+        this.onQueueChangeListener = onQueueChangeListener;
     }
 }

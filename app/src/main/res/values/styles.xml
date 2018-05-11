@@ -13,4 +13,9 @@
         <item name="android:windowExitAnimation">@anim/slide_out_to_bottom</item>
     </style>
 
+    <style name="CustomSwitchTheme" parent="Theme.AppCompat">
+        <item name="colorAccent">@color/colorKara</item>
+        <item name="android:colorForeground">#b7b7b7</item>
+    </style>
+
 </resources>

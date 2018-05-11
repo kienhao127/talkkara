@@ -60,25 +60,23 @@ public class KaraQueueDialog extends DialogFragment {
 
         queueData = KaraQueueManager.getInstance().getQueueData();
         currentUser = KaraQueueManager.getInstance().getCurrentUser();
+        KaraQueueManager.getInstance().setOnQueueChangeListener(new KaraQueueManager.OnQueueChangeListener() {
+            @Override
+            public void onQueueChange() {
+                adapter.notifyDataSetChanged();
+                rv.scheduleLayoutAnimation();
+            }
+        });
 
         init(view);
 
         choose_song.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                switch (currentUser.type){
-                    case User.TYPE_VIWER:
-                        onShowSearchSong();
-                        break;
-                    case User.TYPE_MANAGER:
-                        break;
-                    case User.TYPE_SINGER:
-                    case User.TYPE_WAITTING:
-                        removeFromQueue(currentUser.id);
-                        break;
-                }
+               KaraQueueManager.getInstance().onChooseSongClicked();
             }
         });
+
         setButtonChooseSongType();
 
         return a;
@@ -119,27 +117,6 @@ public class KaraQueueDialog extends DialogFragment {
                 choose_song.setEnabled(true);
                 break;
         }
-    }
-
-    void onShowSearchSong(){
-        SearchBeatDialog searchBeatDialog = new SearchBeatDialog();
-        searchBeatDialog.setSearchSongListener(new SearchBeatDialog.SearchSongListener() {
-            @Override
-            public void onSelectedSong(BeatInfo beatInfo) {
-                KaraQueueManager.getInstance().downloadFile(beatInfo);
-                queueData = KaraQueueManager.getInstance().joinToQueue(beatInfo);
-                adapter.notifyDataSetChanged();
-                rv.scheduleLayoutAnimation();
-            }
-        });
-        searchBeatDialog.show(getFragmentManager(), "searchBeatDialog");
-    }
-
-    void removeFromQueue(int userID){
-        Log.d("Remove ", String.valueOf(userID));
-        queueData = KaraQueueManager.getInstance().removeFromQueue(userID);
-        adapter.notifyDataSetChanged();
-        rv.scheduleLayoutAnimation();
     }
 
     int getScreenHeight(){

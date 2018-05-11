@@ -8,7 +8,7 @@ import android.view.Window;
 import android.widget.ImageView;
 
 import jery.kara.R;
-import jery.kara.manager.KaraManager;
+import jery.kara.karapersonal.manager.KaraPersonalManager;
 import jery.kara.karapersonal.myview.DonutProgress;
 import jery.kara.lyric.myview.LyricView;
 
@@ -30,7 +30,7 @@ public class KaraPersonalActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.kara_personal_activity);
+        setContentView(R.layout.activity_kara_personal);
         init();
     }
 
@@ -39,8 +39,8 @@ public class KaraPersonalActivity extends AppCompatActivity {
         karaBtn = (ImageView) findViewById(R.id.karaBtn);
         lyricView = (LyricView) findViewById(R.id.lyricView);
 
-        final KaraManager karaManager = KaraManager.getInstance();
-        karaManager.setOnStateChangeLister(new KaraManager.OnStateChangeLister() {
+        final KaraPersonalManager karaPersonalManager = KaraPersonalManager.getInstance();
+        karaPersonalManager.setOnStateChangeLister(new KaraPersonalManager.OnStateChangeListener() {
             @Override
             public void onStateChange(int state) {
                 if (state == STATE_NONE){
@@ -58,26 +58,26 @@ public class KaraPersonalActivity extends AppCompatActivity {
                 }
             }
         });
-        karaManager.setOnProgressChangeListener(new KaraManager.OnProgressChangeListener() {
+        karaPersonalManager.setOnProgressChangeListener(new KaraPersonalManager.OnProgressChangeListener() {
             @Override
             public void onProgressChange(int iProgress) {
                 beatProgress.setProgress(iProgress);
             }
         });
 
-        karaManager.setLyricView(lyricView);
-        karaManager.setContext(this);
+        karaPersonalManager.setLyricView(lyricView);
+        karaPersonalManager.setContext(this);
 
         karaBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                karaManager.onControlViewClick();
+                karaPersonalManager.onControlViewClick();
             }
         });
         beatProgress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                karaManager.onControlViewClick();
+                karaPersonalManager.onControlViewClick();
             }
         });
 
@@ -86,8 +86,8 @@ public class KaraPersonalActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        KaraManager.getInstance().onActionStopSong();
-        KaraManager.getInstance().deleteAllFile();
-        KaraManager.getInstance().cancelDownload();
+        KaraPersonalManager.getInstance().onActionStopSong();
+        KaraPersonalManager.getInstance().deleteAllFile();
+        KaraPersonalManager.getInstance().cancelDownload();
     }
 }

@@ -2,6 +2,7 @@ package jery.kara.lyric.myview;
 
 import android.animation.Animator;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -30,25 +31,31 @@ public class LyricView extends LinearLayout{
     TextView highlghtTextView;
     TextView waitingTextView;
     static int MAX_ANIM_DURATION = 1000;
+    static int DEFAULT_HIGHLIGHT_COLOR = Color.parseColor("#76D572");
+    static int DEFAULT_WAITTING_COLOR = Color.parseColor("#FFFFFF");
     String tmpContent = null;
     View parentView;
     FrameLayout frameLayout;
     int duration = 0;
     boolean isStarting = false;
+    int highlightColor;
+    int wattingColor;
 
     public LyricView(Context context) {
-        super(context);
-        init();
+        this(context, null);
     }
 
     public LyricView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        init();
+        this(context, attrs, 0);
     }
 
     public LyricView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
+
+        final TypedArray attributes = context.getTheme().obtainStyledAttributes(attrs, R.styleable.LyricView, defStyleAttr, 0);
+        highlightColor = attributes.getColor(R.styleable.LyricView_highlightColor, DEFAULT_HIGHLIGHT_COLOR);
+        wattingColor = attributes.getColor(R.styleable.LyricView_normalColor, DEFAULT_WAITTING_COLOR);
     }
 
     void init(){
@@ -142,7 +149,7 @@ public class LyricView extends LinearLayout{
     }
 
     void moveUp(){
-        waitingTextView.setTextColor(getResources().getColor(R.color.colorPrimary));
+        waitingTextView.setTextColor(highlightColor);
         Animator.AnimatorListener animationListener = new Animator.AnimatorListener() {
 
             @Override
@@ -187,7 +194,7 @@ public class LyricView extends LinearLayout{
         if (tmpContent != null){
             waitingTextView = getAvailableTextView();
             waitingTextView.setText(tmpContent);
-            waitingTextView.setTextColor(Color.WHITE);
+            waitingTextView.setTextColor(wattingColor);
             waitingTextView.setTextAlignment(TEXT_ALIGNMENT_CENTER);
             waitingTextView.setTextSize(20);
             waitingTextView.setShadowLayer(1, 1,1,Color.BLACK);

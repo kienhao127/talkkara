@@ -67,42 +67,19 @@ public class LyricUtils {
     }
 
     public static boolean parseLine(String line, Lyric lyric){
-        int lineLength = line.length();
-        line = line.trim();
-        int openBracketIndex, closedBracketIndex;
-        openBracketIndex = line.indexOf('[', 0);
+        if (line == null || line.length() <= 0){
+            return false;
+        }
 
-        while (openBracketIndex != -1) {
-            closedBracketIndex = line.indexOf(']', openBracketIndex);
-            if (closedBracketIndex < 1)
-                return false;
-
-            String strTime = line.substring(openBracketIndex + 1, closedBracketIndex);
-
-            ArrayList<Long> timestampList = new ArrayList<>();
-            long time = parseTime(strTime);
-            if (time != -1) {
-                timestampList.add(time);
+        int range = line.indexOf(']');
+        if (range > 0){
+            String strTime = line.substring(1, range);
+            String content = line.substring(range + 1);
+            if (strTime != null && strTime.length() == 8 && content != null && content.length() > 0){
+                long time = parseTime(strTime);
+                lyric.addSentence(content, time);
+                Log.d("Line: ", String.valueOf(strTime) + ": " + content);
             }
-
-            // We may have line like [01:38.33][01:44.01][03:22.05]Test Test
-            while ((lineLength > closedBracketIndex + 2)
-                    && (line.charAt(closedBracketIndex + 1) == '[')) {
-
-                int nextOpenBracketIndex = closedBracketIndex + 1;
-                int nextClosedBracketIndex = line.indexOf(']', nextOpenBracketIndex + 1);
-                time = parseTime(line.substring(nextOpenBracketIndex + 1, nextClosedBracketIndex));
-                if (time != -1) {
-                    timestampList.add(time);
-                }
-                closedBracketIndex = nextClosedBracketIndex;
-            }
-
-            String content = line.substring(closedBracketIndex + 1, line.length());
-            for (long timestamp : timestampList) {
-                lyric.addSentence(content, timestamp);
-            }
-            openBracketIndex = line.indexOf('[', closedBracketIndex + 1);
         }
         return true;
     }
@@ -135,44 +112,5 @@ public class LyricUtils {
         }
 
         return -1;
-    }
-
-    public static int getSentenceIndex(Lyric lyric, long ts, int index) {
-        if (lyric == null || ts < 0 || index < -1)
-            return -1;
-        ArrayList<Sentence> list = lyric.getArrSentences();
-
-        if (index >= list.size())
-            index = list.size() - 1;
-        if (index == -1)
-            index = 0;
-
-        int found = -2;
-
-        if (list.get(index).getFromTime() > ts) {
-            for (int i = index; i > -1; --i) {
-                if (list.get(i).getFromTime() <= ts) {
-                    found = i;
-                    break;
-                }
-            }
-            // First line of lyric is bigger than starting time.
-            if (found == -2)
-                found = -1;
-        } else {
-            for (int i = index; i < list.size() - 1; ++i) {
-                //Log.d(TAG, String.format("ts: %d, offset: %d, curr_ts: %d, next_ts: %d", ts, offset, list.get(i).getFromTime(), list.get(i + 1).getFromTime()));
-                if (list.get(i + 1).getFromTime() > ts) {
-                    found = i;
-                    break;
-                }
-            }
-            // If not found, return last mLyricIndex
-            if (found == -2) {
-                found = list.size() - 1;
-            }
-        }
-
-        return found;
     }
 }

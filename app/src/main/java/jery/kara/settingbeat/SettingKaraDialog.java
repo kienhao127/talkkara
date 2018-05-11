@@ -55,8 +55,8 @@ public class SettingKaraDialog extends DialogFragment {
         beat_volume_seekbar_value.setText(String.valueOf(beatVolume));
         beat_volume_seekbar.setProgress(beatVolume);
 
-        tone += 3;
         tone_seekbar_value.setText(String.valueOf(tone));
+        tone += 3;
         tone_seekbar.setProgress(tone);
 
         switch_whatUHear.setChecked(isWhatUHearChecked);
@@ -129,7 +129,7 @@ public class SettingKaraDialog extends DialogFragment {
         btn_stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                KaraManager.getInstance().onActionStopSong();
+                onSettingChangeListener.onButtonStopClicked();
                 dismiss();
             }
         });
@@ -140,6 +140,7 @@ public class SettingKaraDialog extends DialogFragment {
         void onMicVolumeSeekbarChange(int value);
         void onToneSeekbarChange(int value);
         void onSwitchWhatUHearChange(boolean b);
+        void onButtonStopClicked();
     }
 
     private OnSettingChangeListener onSettingChangeListener;
