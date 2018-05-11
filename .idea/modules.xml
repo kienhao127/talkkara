@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://D:\Android\GitHub\talkkara\app\app.iml" filepath="D:\Android\GitHub\talkkara\app\app.iml" />
+      <module fileurl="file://C:\Github\kara\.idea\kara.iml" filepath="C:\Github\kara\.idea\kara.iml" />
+      <module fileurl="file://D:\Android\GitHub\talkkara\kara.iml" filepath="D:\Android\GitHub\talkkara\kara.iml" />
+      <module fileurl="file://$PROJECT_DIR$/talkkara.iml" filepath="$PROJECT_DIR$/talkkara.iml" />
+    </modules>
+  </component>
+</project>

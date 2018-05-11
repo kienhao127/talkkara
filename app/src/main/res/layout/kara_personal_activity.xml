@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/background">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginTop="70dp">
+        <jery.kara.lyric.myview.LyricView
+            android:id="@+id/lyricView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            custom:highlightColor="@color/colorKara"
+            custom:lyricTextSize="15dp"
+            custom:normalColor="#FFFFFF" />
+    </RelativeLayout>
+
+
+    <ImageView
+        android:id="@+id/karaBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/karaoke_button"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="10dp" />
+
+    <jery.kara.karapersonal.myview.DonutProgress
+        android:id="@+id/beatProgress"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="10dp"
+        android:visibility="invisible"
+        custom:donut_finished_color="@color/colorPrimary"/>
+
+</RelativeLayout>

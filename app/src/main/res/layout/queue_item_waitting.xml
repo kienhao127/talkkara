@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp">
+    <TextView
+        android:id="@+id/txt_queue_num"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:text="1"
+        android:gravity="center"
+        android:textColor="#000"
+        android:textSize="17dp"/>
+
+    <ImageView
+        android:id="@+id/user_avatar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_toEndOf="@+id/txt_queue_num"
+        android:src="@drawable/user_avatar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="vertical"
+        android:layout_toEndOf="@id/user_avatar"
+        android:layout_toStartOf="@+id/remove"
+        android:layout_marginLeft="5dp">
+        <TextView
+            android:id="@+id/txt_user_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Tên người dùng"
+            android:textColor="#000"
+            android:textSize="20dp"/>
+        <TextView
+            android:id="@+id/txt_song_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/ic_music_note"
+            android:drawablePadding="5dp"
+            android:text="Tên bài hát"
+            android:textSize="15dp"
+            android:gravity="center_vertical"/>
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/remove"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:padding="13dp"
+        android:src="@drawable/ic_remove"
+        android:visibility="invisible"/>
+</RelativeLayout>

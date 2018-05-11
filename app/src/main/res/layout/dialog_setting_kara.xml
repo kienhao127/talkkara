@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:isb="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/radius_background">
+    <TextView
+        android:id="@+id/lbl_setting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tùy chọn"
+        android:background="@drawable/search_dialog_title_background"
+        android:textColor="#FFF"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:padding="5dp"
+        android:textSize="20dp"/>
+    <TextView
+        android:id="@+id/lbl_mic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lbl_setting"
+        android:text="Mic Volume:"
+        android:textColor="#000"
+        android:paddingLeft="15dp"
+        android:textSize="15dp"/>
+    <TextView
+        android:id="@+id/mic_seekbar_value"
+        android:layout_width="45dp"
+        android:layout_height="30dp"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/lbl_mic"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="50%"
+        android:textSize="15dp" />
+    <SeekBar
+        android:id="@+id/mic_seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@id/lbl_mic"
+        android:progress="50"
+        android:thumbTint="@color/colorKara"
+        android:progressTint="@color/colorKara"
+        android:layout_toLeftOf="@+id/mic_seekbar_value"/>
+
+    <TextView
+        android:id="@+id/lbl_volume"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Beat Volume:"
+        android:textColor="#000"
+        android:layout_below="@id/mic_seekbar"
+        android:paddingLeft="15dp"
+        android:textSize="15dp"/>
+    <TextView
+        android:id="@+id/volume_seekbar_value"
+        android:layout_width="45dp"
+        android:layout_height="30dp"
+        android:layout_below="@id/lbl_volume"
+        android:layout_alignParentEnd="true"
+        android:textSize="15dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="50%"/>
+    <SeekBar
+        android:id="@+id/volume_seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@id/lbl_volume"
+        android:progress="50"
+        android:thumbTint="@color/colorKara"
+        android:progressTint="@color/colorKara"
+        android:layout_toLeftOf="@+id/volume_seekbar_value"/>
+
+    <TextView
+        android:id="@+id/lbl_tone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tone:"
+        android:textColor="#000"
+        android:layout_below="@+id/volume_seekbar"
+        android:paddingLeft="15dp"
+        android:textSize="15dp"/>
+    <TextView
+        android:id="@+id/tone_seekbar_value"
+        android:layout_width="45dp"
+        android:layout_height="30dp"
+        android:layout_below="@id/lbl_tone"
+        android:textSize="15dp"
+        android:layout_alignParentEnd="true"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="0"/>
+    <jery.kara.settingbeat.myview.IndicatorSeekBar
+        android:id="@+id/tone_seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        isb:filledColor="@color/colorKara"
+        isb:rangeCount="7"
+        isb:currentSlot="3"
+        android:layout_below="@+id/lbl_tone"
+        android:layout_toLeftOf="@+id/tone_seekbar_value"
+        />
+
+    <TextView
+        android:id="@+id/lbl_echo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/switch_whatUHear"
+        android:layout_below="@+id/tone_seekbar"
+        android:gravity="center"
+        android:paddingLeft="15dp"
+        android:text="What U Hear: "
+        android:textColor="#000" />
+    <Switch
+        android:id="@+id/switch_whatUHear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/lbl_echo"
+        android:layout_below="@id/tone_seekbar"
+        android:thumbTint="@color/colorKara"
+        android:progressTint="@color/colorKara"
+        android:keepScreenOn="true"
+        />
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/lbl_echo"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
+        android:background="@android:color/darker_gray"/>
+
+    <TextView
+        android:id="@+id/btn_stop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tắt nhạc"
+        android:textSize="25dp"
+        android:gravity="center_horizontal"
+        android:layout_below="@+id/line"
+        android:textColor="@color/colorPrimary"
+        android:padding="5dp"/>
+</RelativeLayout>
