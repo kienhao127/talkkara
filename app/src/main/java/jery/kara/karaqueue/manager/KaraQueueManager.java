@@ -113,6 +113,14 @@ public class KaraQueueManager extends KaraManager {
         onQueueChangeListener.onQueueChange();
     }
 
+    public void turnOnOffCamera(boolean isOn){
+        if (isOn){
+            //turn off
+        } else {
+            //turn on
+        }
+    }
+
     private OnQueueChangeListener onQueueChangeListener;
     public interface OnQueueChangeListener{
         void onQueueChange();

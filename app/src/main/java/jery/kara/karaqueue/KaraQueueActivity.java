@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -21,6 +22,12 @@ public class KaraQueueActivity extends AppCompatActivity {
     PulsatorLayout pulsatorLayout;
     LyricView lyricView;
     TextView kara_queue;
+
+    ImageView img_camera;
+    ImageView img_setting;
+    ImageView img_close;
+
+    boolean isCameraOn = false;
 
     User currentUser = new User();
     private List<User> queueData = new ArrayList<>();
@@ -49,12 +56,38 @@ public class KaraQueueActivity extends AppCompatActivity {
             }
         });
         kara_queue.setText("Cầm mic (" + queueData.size() + ")");
+
+        img_camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                KaraQueueManager.getInstance().turnOnOffCamera(isCameraOn);
+                isCameraOn = !isCameraOn;
+            }
+        });
+
+        img_setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                KaraQueueManager.getInstance().showSettingDialog();
+            }
+        });
+
+        img_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                KaraQueueManager.getInstance().onActionStopSong();
+            }
+        });
     }
 
     void init(){
         kara_queue = (TextView) findViewById(R.id.kara_queue);
         lyricView = (LyricView) findViewById(R.id.lyricView);
         pulsatorLayout = (PulsatorLayout) findViewById(R.id.pulsator);
+        pulsatorLayout.startEffect();
+        img_camera = (ImageView) findViewById(R.id.img_camera);
+        img_setting = (ImageView) findViewById(R.id.img_setting);
+        img_close = (ImageView) findViewById(R.id.img_close);
     }
 
     void loadData(){

@@ -70,7 +70,7 @@ public abstract class KaraManager {
         searchBeatDialog.show(((Activity) context).getFragmentManager(), "searchBeatDialog");
     }
 
-    protected void showSettingDialog(){
+    public void showSettingDialog(){
         SettingKaraDialog settingKaraDialog = new SettingKaraDialog();
         settingKaraDialog.beatVolume = beatVol;
         settingKaraDialog.micVolume = micVol;

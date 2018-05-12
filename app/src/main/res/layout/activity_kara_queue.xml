@@ -8,6 +8,29 @@
     tools:context="jery.kara.karaqueue.KaraQueueActivity"
     android:background="@drawable/queue_background">
     <RelativeLayout
+        android:id="@+id/loading_new_singer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginTop="70dp">
+        <ImageView
+            android:id="@+id/img_micro"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_microphone" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Đang đợi ca sĩ tiếp theo cầm mic..."
+            android:layout_below="@id/img_micro"
+            android:textColor="#FFF"
+            android:textSize="15dp"
+            android:gravity="center"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/singer_layout"
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:layout_marginTop="70dp">
@@ -32,6 +55,38 @@
             app:pulse_repeat="0"
             app:pulse_startFromScratch="false">
         </jery.kara.karaqueue.myview.PulsatorLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/setting_layout"
+            android:layout_below="@id/pulsator"
+            android:gravity="center_horizontal">
+
+            <ImageView
+                android:id="@+id/img_camera"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:src="@drawable/ic_camera"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"/>
+
+            <ImageView
+                android:id="@+id/img_setting"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:src="@drawable/ic_setting"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"/>
+
+            <ImageView
+                android:id="@+id/img_close"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:src="@drawable/ic_remove"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"/>
+        </LinearLayout>
     </RelativeLayout>
 
     <TextView
