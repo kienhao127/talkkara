@@ -1,15 +1,22 @@
 package jery.kara.searchbeat;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -22,12 +29,14 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import jery.kara.MainActivity;
 import jery.kara.R;
 import jery.kara.karaqueue.KaraQueueActivity;
 import jery.kara.searchbeat.helper.FetchData;
@@ -37,6 +46,9 @@ import jery.kara.searchbeat.helper.FetchData;
  */
 
 public class SearchBeatDialog extends DialogFragment implements View.OnClickListener{
+
+    private static final int PERMISSION_REQUEST_CODE = 1;
+    private static final int EXTERNAL_STORAGE_PERMISSION_CONSTANT = 100;
 
     RecyclerView rv;
     SearchBeatAdapter adapter;
@@ -95,9 +107,14 @@ public class SearchBeatDialog extends DialogFragment implements View.OnClickList
         adapter.setOnItemClickListener(new SearchBeatAdapter.onItemClickListener() {
             @Override
             public void onItemClickListener(View view, BeatInfo beatInfo) {
-                isSearch = false;
-                searchSongListener.onSongSelected(beatInfo);
-                dismiss();
+                if (checkPermission()) {
+                    isSearch = false;
+                    searchSongListener.onSongSelected(beatInfo);
+                    dismiss();
+                } else {
+                    requestPermission();
+                }
+
             }
         });
 
@@ -170,5 +187,18 @@ public class SearchBeatDialog extends DialogFragment implements View.OnClickList
 
     public interface SearchSongListener {
         void onSongSelected(BeatInfo beatInfo);
+    }
+
+    private boolean checkPermission() {
+        int result = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (result == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
     }
 }
