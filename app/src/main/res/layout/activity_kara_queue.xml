@@ -34,6 +34,16 @@
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:layout_marginTop="70dp">
+
+        <TextView
+            android:id="@+id/lbl_songName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:gravity="center"
+            android:text="Tên bài hát"
+            android:textColor="#FFF"
+            android:textSize="20dp" />
         <jery.kara.lyric.myview.LyricView
             android:id="@+id/lyricView"
             android:layout_width="match_parent"

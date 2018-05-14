@@ -1,7 +1,9 @@
 package jery.kara.karaqueue.manager;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
+import android.support.v7.app.AlertDialog;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,13 +25,17 @@ import jery.kara.searchbeat.SearchBeatDialog;
  */
 
 public class KaraQueueManager extends KaraManager {
+
+    static final int STATE_SINGER_LOADING = 1;
+    static final int STATE_SINGING = 2;
+
+    int state = STATE_SINGING;
+
     List<User> queueData = new ArrayList<>();
     User currentUser = new User();
 
     private static KaraQueueManager instance;
-    private KaraQueueManager(){
-
-    }
+    private KaraQueueManager(){}
     public static KaraQueueManager getInstance(){
         if (instance == null){
             instance = new KaraQueueManager();
@@ -84,33 +90,79 @@ public class KaraQueueManager extends KaraManager {
 
     }
 
+    //Chủ động dừng bài hát
     @Override
     protected void onBeatStop() {
+        removeFromQueue(currentUser.id);
+        state = STATE_SINGER_LOADING;
+        onStateChangeListener.onStateChange(state);
+    }
 
+    //Hát hết bài
+    @Override
+    protected void onBeatFinish() {
+        removeFromQueue(currentUser.id);
+        state = STATE_SINGER_LOADING;
+        onStateChangeListener.onStateChange(state);
     }
 
     public void onChooseSongClicked(){
         switch (currentUser.type){
+            case User.TYPE_BANNED:
             case User.TYPE_VIWER:
                 showSearchDailog();
                 break;
-            case User.TYPE_MANAGER:
-                break;
             case User.TYPE_SINGER:
+                stopSinging();
             case User.TYPE_WAITTING:
                 removeFromQueue(currentUser.id);
                 break;
         }
     }
 
+    //Thêm vào hàng đợi
     public void joinToQueue(BeatInfo beatInfo){
-        //Thêm vào hàng đợi
+        currentUser.type = User.TYPE_WAITTING;
+        onUserTypeChangeListener.onUserTypeChange(currentUser.type);
         onQueueChangeListener.onQueueChange();
     }
 
+    //Xóa khỏi hàng đợi
     public void removeFromQueue(int userID){
-        //Xóa khỏi hàng đợi
+        currentUser.type = User.TYPE_VIWER;
+        onUserTypeChangeListener.onUserTypeChange(currentUser.type);
         onQueueChangeListener.onQueueChange();
+    }
+
+    //Bắt đầu hát
+    void startSinging(){
+        currentUser.type = User.TYPE_SINGER;
+        onUserTypeChangeListener.onUserTypeChange(currentUser.type);
+        state = STATE_SINGING;
+        onStateChangeListener.onStateChange(state);
+    }
+
+    void stopSinging(){
+        //Ngừng biểu diễn
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Thông báo");
+        String notiString = "";
+        builder.setMessage("Bạn có thật sự muốn ngừng biểu diễn?" + notiString);
+        builder.setCancelable(false);
+        builder.setNegativeButton("Đồng ý", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //Ngừng biểu diễn
+                state = STATE_SINGER_LOADING;
+                onStateChangeListener.onStateChange(state);
+            }
+        });
+        builder.setPositiveButton("Hủy bỏ", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {}
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     public void turnOnOffCamera(boolean isOn){
@@ -127,5 +179,21 @@ public class KaraQueueManager extends KaraManager {
     }
     public void setOnQueueChangeListener(OnQueueChangeListener onQueueChangeListener) {
         this.onQueueChangeListener = onQueueChangeListener;
+    }
+
+    public interface OnStateChangeListener{
+        void onStateChange(int state);
+    }
+    private OnStateChangeListener onStateChangeListener;
+    public void setOnStateChangeListener(OnStateChangeListener onStateChangeListener) {
+        this.onStateChangeListener = onStateChangeListener;
+    }
+
+    public interface OnUserTypeChangeListener{
+        void onUserTypeChange(int userType);
+    }
+    private OnUserTypeChangeListener onUserTypeChangeListener;
+    public void setOnUserTypeChangeListener(OnUserTypeChangeListener onUserTypeChangeListener) {
+        this.onUserTypeChangeListener = onUserTypeChangeListener;
     }
 }

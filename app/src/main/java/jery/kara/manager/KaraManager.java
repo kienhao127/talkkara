@@ -36,7 +36,7 @@ public abstract class KaraManager {
     int beatDuration = 1;
 
     TKaraDownloader tKaraDownloader;
-    Context context;
+    protected Context context;
 
     //Settting Kara
     int beatVol = 30;
@@ -51,6 +51,7 @@ public abstract class KaraManager {
     protected abstract void onCancelDownload();
     protected abstract void onBeatPlaying(int playingProgress);
     protected abstract void onBeatStop();
+    protected abstract void onBeatFinish();
 
     public void setLyricView(LyricView lyricView) {
         this.lyricView = lyricView;
@@ -150,8 +151,8 @@ public abstract class KaraManager {
             mediaPlayer.pause();
             mediaPlayer.stop();
             mediaPlayer.release();
-            onBeatStop();
             lyricView.stop();
+            onBeatStop();
         }
     }
 
@@ -179,6 +180,8 @@ public abstract class KaraManager {
                 }
                 indexOfTime++;
             }
+        }else {
+            onBeatFinish();
         }
     }
 
@@ -216,10 +219,11 @@ public abstract class KaraManager {
         if (dir.isDirectory())
         {
             String[] children = dir.list();
-            for (int i = 0; i < children.length; i++)
-            {
-                if (children[i].endsWith(".lrc") || children[i].endsWith(".mp3")){
-                    new File(dir, children[i]).delete();
+            if (children != null) {
+                for (int i = 0; i < children.length; i++) {
+                    if (children[i].endsWith(".lrc") || children[i].endsWith(".mp3")) {
+                        new File(dir, children[i]).delete();
+                    }
                 }
             }
         }

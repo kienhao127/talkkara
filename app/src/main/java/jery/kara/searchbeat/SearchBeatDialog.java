@@ -48,7 +48,6 @@ import jery.kara.searchbeat.helper.FetchData;
 public class SearchBeatDialog extends DialogFragment implements View.OnClickListener{
 
     private static final int PERMISSION_REQUEST_CODE = 1;
-    private static final int EXTERNAL_STORAGE_PERMISSION_CONSTANT = 100;
 
     RecyclerView rv;
     SearchBeatAdapter adapter;

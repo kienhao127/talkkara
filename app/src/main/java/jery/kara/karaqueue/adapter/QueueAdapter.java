@@ -78,7 +78,7 @@ public class QueueAdapter extends RecyclerView.Adapter {
             }
         });
 
-        if (currentUser.type == User.TYPE_MANAGER){
+        if (currentUser.role == User.ROLE_MANAGER){
             holder.remove.setVisibility(View.VISIBLE);
         }
     }
@@ -98,7 +98,7 @@ public class QueueAdapter extends RecyclerView.Adapter {
                 KaraQueueManager.getInstance().removeFromQueue(data.get(position).id);
             }
         });
-        if (currentUser.type == User.TYPE_MANAGER){
+        if (currentUser.role == User.ROLE_MANAGER){
             holder.remove.setVisibility(View.VISIBLE);
         }
     }

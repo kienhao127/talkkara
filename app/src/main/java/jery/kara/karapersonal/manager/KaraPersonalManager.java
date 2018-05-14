@@ -28,6 +28,7 @@ public class KaraPersonalManager extends KaraManager {
 
     int state = STATE_NONE;
 
+    BeatInfo beatInfo;
 
     @Override
     protected void downloadSongStart() {
@@ -42,6 +43,7 @@ public class KaraPersonalManager extends KaraManager {
 
     @Override
     protected void downloadSongSuccess(BeatInfo beatInfo) {
+        this.beatInfo = beatInfo;
         state = STATE_PLAYING;
         onStateChangeListener.onStateChange(state);
         prepareBeat(beatInfo.beatLocalPath);
@@ -69,6 +71,15 @@ public class KaraPersonalManager extends KaraManager {
     protected void onBeatStop() {
         state = STATE_NONE;
         onStateChangeListener.onStateChange(state);
+    }
+
+    @Override
+    protected void onBeatFinish() {
+        state = STATE_PLAYING;
+        onStateChangeListener.onStateChange(state);
+        prepareBeat(beatInfo.beatLocalPath);
+        prepareLyric(beatInfo.lyricLocalPath);
+        startSync();
     }
 
     public void onControlViewClick(){

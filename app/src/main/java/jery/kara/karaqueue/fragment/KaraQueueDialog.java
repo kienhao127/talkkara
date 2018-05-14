@@ -84,7 +84,7 @@ public class KaraQueueDialog extends DialogFragment {
 
     private void init(View view) {
         lbl_listQueue = (TextView) view.findViewById(R.id.lbl_listQueue);
-        lbl_listQueue.setText("Danh sách cầm mic (" + queueData.size() + ")");
+        lbl_listQueue.setText("Lượt cầm mic (" + queueData.size() + ")");
         choose_song = (TextView) view.findViewById(R.id.lbl_chooseSong);
         rv = view.findViewById(R.id.listQueue);
         rv.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
@@ -108,9 +108,11 @@ public class KaraQueueDialog extends DialogFragment {
                 choose_song.setBackgroundResource(R.drawable.radius_choosesong_background);
                 choose_song.setEnabled(true);
                 break;
-            case User.TYPE_MANAGER:
-                break;
             case User.TYPE_SINGER:
+                choose_song.setText("Ngừng biểu diễn");
+                choose_song.setBackgroundResource(R.drawable.radius_choosesong_background);
+                choose_song.setEnabled(true);
+                break;
             case User.TYPE_WAITTING:
                 choose_song.setText("Rời khỏi hàng");
                 choose_song.setBackgroundResource(R.drawable.radius_choosesong_background);
