@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 import jery.kara.R;
@@ -31,6 +32,7 @@ public class KaraPersonalActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_kara_personal);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         init();
     }
 
@@ -54,6 +56,8 @@ public class KaraPersonalActivity extends AppCompatActivity {
                     karaBtn.setVisibility(View.INVISIBLE);
                 }
                 if (state == STATE_PLAYING){
+                    beatProgress.setVisibility(View.VISIBLE);
+                    karaBtn.setVisibility(View.INVISIBLE);
                     beatProgress.setProgress(0);
                 }
             }

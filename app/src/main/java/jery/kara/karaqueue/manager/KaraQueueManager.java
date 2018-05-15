@@ -34,6 +34,8 @@ public class KaraQueueManager extends KaraManager {
     List<User> queueData = new ArrayList<>();
     User currentUser = new User();
 
+    TextView btnOpenQueue;
+
     private static KaraQueueManager instance;
     private KaraQueueManager(){}
     public static KaraQueueManager getInstance(){
@@ -59,6 +61,9 @@ public class KaraQueueManager extends KaraManager {
         return currentUser;
     }
 
+    public void setBtnOpenQueue(TextView btnOpenQueue) {
+        this.btnOpenQueue = btnOpenQueue;
+    }
 
     @Override
     protected void downloadSongStart() {
@@ -93,7 +98,7 @@ public class KaraQueueManager extends KaraManager {
     //Chủ động dừng bài hát
     @Override
     protected void onBeatStop() {
-        removeFromQueue(currentUser.id);
+        removeFromQueue(currentUser);
         state = STATE_SINGER_LOADING;
         onStateChangeListener.onStateChange(state);
     }
@@ -101,7 +106,7 @@ public class KaraQueueManager extends KaraManager {
     //Hát hết bài
     @Override
     protected void onBeatFinish() {
-        removeFromQueue(currentUser.id);
+        removeFromQueue(currentUser);
         state = STATE_SINGER_LOADING;
         onStateChangeListener.onStateChange(state);
     }
@@ -115,21 +120,26 @@ public class KaraQueueManager extends KaraManager {
             case User.TYPE_SINGER:
                 stopSinging();
             case User.TYPE_WAITTING:
-                removeFromQueue(currentUser.id);
+                removeFromQueue(currentUser);
                 break;
         }
     }
 
     //Thêm vào hàng đợi
     public void joinToQueue(BeatInfo beatInfo){
+        currentUser.beatInfo = beatInfo;
         currentUser.type = User.TYPE_WAITTING;
+        queueData.add(currentUser);
+        btnOpenQueue.setText("Cầm mic (" + queueData.size() + ")");
         onUserTypeChangeListener.onUserTypeChange(currentUser.type);
         onQueueChangeListener.onQueueChange();
     }
 
     //Xóa khỏi hàng đợi
-    public void removeFromQueue(int userID){
+    public void removeFromQueue(User user){
+        queueData.remove(user);
         currentUser.type = User.TYPE_VIWER;
+        btnOpenQueue.setText("Cầm mic (" + queueData.size() + ")");
         onUserTypeChangeListener.onUserTypeChange(currentUser.type);
         onQueueChangeListener.onQueueChange();
     }

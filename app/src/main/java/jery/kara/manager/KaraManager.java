@@ -161,10 +161,11 @@ public abstract class KaraManager {
         @Override
         public void run() {
             doSync();
-            handler.postDelayed(this, 50);
+            handler.postDelayed(this, 500);
         }
     };
 
+    long beforeCurrentTime = 0;
     void doSync(){
         currentTime = mediaPlayer.getCurrentPosition();
         float playingProgress = currentTime*100/beatDuration;
@@ -180,9 +181,12 @@ public abstract class KaraManager {
                 }
                 indexOfTime++;
             }
-        }else {
+        }
+        Log.d("isFinish", String.valueOf(currentTime) + " = " + String.valueOf(mediaPlayer.getDuration()));
+        if (currentTime == beforeCurrentTime){
             onBeatFinish();
         }
+        beforeCurrentTime = currentTime;
     }
 
     void downloadFile(final BeatInfo beatInfo){

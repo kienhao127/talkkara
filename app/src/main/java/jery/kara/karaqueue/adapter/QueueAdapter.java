@@ -74,7 +74,7 @@ public class QueueAdapter extends RecyclerView.Adapter {
         holder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                KaraQueueManager.getInstance().removeFromQueue(data.get(0).id);
+                KaraQueueManager.getInstance().removeFromQueue(data.get(0));
             }
         });
 
@@ -95,7 +95,7 @@ public class QueueAdapter extends RecyclerView.Adapter {
         holder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                KaraQueueManager.getInstance().removeFromQueue(data.get(position).id);
+                KaraQueueManager.getInstance().removeFromQueue(data.get(position));
             }
         });
         if (currentUser.role == User.ROLE_MANAGER){

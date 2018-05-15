@@ -75,6 +75,7 @@ public class KaraPersonalManager extends KaraManager {
 
     @Override
     protected void onBeatFinish() {
+        stopSync();
         state = STATE_PLAYING;
         onStateChangeListener.onStateChange(state);
         prepareBeat(beatInfo.beatLocalPath);
@@ -94,9 +95,7 @@ public class KaraPersonalManager extends KaraManager {
     public interface OnStateChangeListener {
         void onStateChange(int state);
     }
-
     private OnStateChangeListener onStateChangeListener;
-
     public void setOnStateChangeLister(OnStateChangeListener onStateChangeListener) {
         this.onStateChangeListener = onStateChangeListener;
     }
@@ -105,9 +104,7 @@ public class KaraPersonalManager extends KaraManager {
     public interface OnProgressChangeListener {
         void onProgressChange(int iProgress);
     }
-
     private OnProgressChangeListener onProgressChangeListener;
-
     public void setOnProgressChangeListener(OnProgressChangeListener onProgressChangeListener) {
         this.onProgressChangeListener = onProgressChangeListener;
     }

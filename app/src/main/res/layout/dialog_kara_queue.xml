@@ -27,13 +27,24 @@
         android:layout_marginLeft="10dp"
         android:layout_below="@id/line1"/>
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/listQueue"
+        android:id="@+id/karaQueue"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/lbl_listQueue"
         android:layout_above="@id/line"
         android:layout_margin="10dp">
     </android.support.v7.widget.RecyclerView>
+    <TextView
+        android:id="@+id/loading_queue"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/lbl_listQueue"
+        android:layout_above="@id/line"
+        android:layout_margin="10dp"
+        android:text="Hiện không có ai đang cầm mic"
+        android:textSize="15dp"
+        android:gravity="center"
+        android:visibility="gone"/>
     <View
         android:id="@+id/line"
         android:layout_above="@id/lbl_chooseSong"
