@@ -53,6 +53,7 @@ public class DonutProgress extends View implements Runnable{
     private boolean mStop = false;
     private boolean isLooping = false;
     private boolean showText = false;
+    private boolean isDownloading = false;
 
     public DonutProgress(Context context) {
         this(context, null);
@@ -195,13 +196,17 @@ public class DonutProgress extends View implements Runnable{
     }
 
     public void setShowText(boolean showText) {
-        if (showText){
-            innerBackgroundColor = Color.BLACK;
-        } else {
-            innerBackgroundColor = Color.TRANSPARENT;
-        }
-        innerCirclePaint.setColor(innerBackgroundColor);
+//        if (showText){
+//            innerBackgroundColor = Color.BLACK;
+//        } else {
+//            innerBackgroundColor = Color.TRANSPARENT;
+//        }
+//        innerCirclePaint.setColor(innerBackgroundColor);
         this.showText = showText;
+    }
+
+    public void setDownloading(boolean downloading) {
+        isDownloading = downloading;
     }
 
     public void start(){
@@ -280,6 +285,12 @@ public class DonutProgress extends View implements Runnable{
                 float textHeight = textPaint.descent() + textPaint.ascent();
                 canvas.drawText(text, (getWidth() - textPaint.measureText(text)) / 2.0f, (getWidth() - textHeight) / 2.0f, textPaint);
             }
+        }
+
+        if (isDownloading){
+            setBackgroundResource(R.drawable.downloading);
+        } else {
+            setBackgroundResource(R.drawable.stop);
         }
 
         invalidate();

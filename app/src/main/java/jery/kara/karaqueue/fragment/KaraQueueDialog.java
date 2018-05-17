@@ -56,6 +56,7 @@ public class KaraQueueDialog extends DialogFragment {
         currentUser = KaraQueueManager.getInstance().getCurrentUser();
         init(view);
 
+        KaraQueueManager.getInstance().setBtnChooseSong(btnChooseSong);
         KaraQueueManager.getInstance().setOnQueueChangeListener(new KaraQueueManager.OnQueueChangeListener() {
             @Override
             public void onQueueChange() {

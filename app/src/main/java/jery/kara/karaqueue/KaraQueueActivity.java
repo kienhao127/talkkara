@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jery.kara.R;
+import jery.kara.karapersonal.manager.KaraPersonalManager;
 import jery.kara.karaqueue.fragment.KaraQueueDialog;
 import jery.kara.karaqueue.manager.KaraQueueManager;
 import jery.kara.karaqueue.model.User;
@@ -183,5 +184,13 @@ public class KaraQueueActivity extends AppCompatActivity {
 //            }
 //            queueData.add(u);
 //        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        KaraPersonalManager.getInstance().onActionStopSong();
+        KaraPersonalManager.getInstance().deleteAllFile();
+        KaraPersonalManager.getInstance().cancelDownload();
     }
 }

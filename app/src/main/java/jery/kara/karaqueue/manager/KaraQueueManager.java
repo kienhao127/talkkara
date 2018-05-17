@@ -35,6 +35,7 @@ public class KaraQueueManager extends KaraManager {
     User currentUser = new User();
 
     TextView btnOpenQueue;
+    TextView btnChooseSong;
 
     private static KaraQueueManager instance;
     private KaraQueueManager(){}
@@ -65,6 +66,10 @@ public class KaraQueueManager extends KaraManager {
         this.btnOpenQueue = btnOpenQueue;
     }
 
+    public void setBtnChooseSong(TextView btnChooseSong) {
+        this.btnChooseSong = btnChooseSong;
+    }
+
     @Override
     protected void downloadSongStart() {
 
@@ -72,7 +77,9 @@ public class KaraQueueManager extends KaraManager {
 
     @Override
     protected void downloadSongProgress(int iProgress) {
-
+        btnChooseSong.setEnabled(false);
+        btnChooseSong.setBackgroundResource(R.drawable.radius_choosesong_background);
+        btnChooseSong.setText("Đang tải bài hát: " + iProgress + "%");
     }
 
     @Override
@@ -82,7 +89,9 @@ public class KaraQueueManager extends KaraManager {
 
     @Override
     protected void downloadSongError() {
-
+        btnChooseSong.setText("Chọn bài hát");
+        btnChooseSong.setBackgroundResource(R.drawable.radius_choosesong_background);
+        btnChooseSong.setEnabled(true);
     }
 
     @Override
@@ -99,16 +108,20 @@ public class KaraQueueManager extends KaraManager {
     @Override
     protected void onBeatStop() {
         removeFromQueue(currentUser);
-        state = STATE_SINGER_LOADING;
-        onStateChangeListener.onStateChange(state);
+        User nextSinger = getNextSinger();
+        if (nextSinger != null){
+            //Ca sĩ tiếp theo
+        }
     }
 
     //Hát hết bài
     @Override
     protected void onBeatFinish() {
         removeFromQueue(currentUser);
-        state = STATE_SINGER_LOADING;
-        onStateChangeListener.onStateChange(state);
+        User nextSinger = getNextSinger();
+        if (nextSinger != null){
+            //Ca sĩ tiếp theo
+        }
     }
 
     public void onChooseSongClicked(){
@@ -129,19 +142,26 @@ public class KaraQueueManager extends KaraManager {
     public void joinToQueue(BeatInfo beatInfo){
         currentUser.beatInfo = beatInfo;
         currentUser.type = User.TYPE_WAITTING;
-        queueData.add(currentUser);
-        btnOpenQueue.setText("Cầm mic (" + queueData.size() + ")");
         onUserTypeChangeListener.onUserTypeChange(currentUser.type);
+
+        queueData.add(currentUser);
         onQueueChangeListener.onQueueChange();
+
+        btnOpenQueue.setText("Cầm mic (" + queueData.size() + ")");
     }
 
     //Xóa khỏi hàng đợi
     public void removeFromQueue(User user){
         queueData.remove(user);
-        currentUser.type = User.TYPE_VIWER;
-        btnOpenQueue.setText("Cầm mic (" + queueData.size() + ")");
-        onUserTypeChangeListener.onUserTypeChange(currentUser.type);
         onQueueChangeListener.onQueueChange();
+
+        currentUser.type = User.TYPE_VIWER;
+        onUserTypeChangeListener.onUserTypeChange(currentUser.type);
+
+        state = STATE_SINGER_LOADING;
+        onStateChangeListener.onStateChange(state);
+
+        btnOpenQueue.setText("Cầm mic (" + queueData.size() + ")");
     }
 
     //Bắt đầu hát
@@ -150,6 +170,13 @@ public class KaraQueueManager extends KaraManager {
         onUserTypeChangeListener.onUserTypeChange(currentUser.type);
         state = STATE_SINGING;
         onStateChangeListener.onStateChange(state);
+    }
+
+    User getNextSinger(){
+        if (queueData.size() > 1){
+            return queueData.get(0);
+        }
+        return null;
     }
 
     void stopSinging(){

@@ -233,7 +233,7 @@ public abstract class KaraManager {
         }
     }
 
-    void showAlertDialog(){
+    protected void showAlertDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Thông báo");
         builder.setMessage("Tải không thành công");

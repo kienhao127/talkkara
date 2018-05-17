@@ -46,16 +46,19 @@ public class KaraPersonalActivity extends AppCompatActivity {
             @Override
             public void onStateChange(int state) {
                 if (state == STATE_NONE){
+                    beatProgress.setDownloading(false);
                     beatProgress.setProgress(0);
                     beatProgress.stop();
                     beatProgress.setVisibility(View.INVISIBLE);
                     karaBtn.setVisibility(View.VISIBLE);
                 }
                 if (state == STATE_DOWNLOADING){
+                    beatProgress.setDownloading(true);
                     beatProgress.setVisibility(View.VISIBLE);
                     karaBtn.setVisibility(View.INVISIBLE);
                 }
                 if (state == STATE_PLAYING){
+                    beatProgress.setDownloading(false);
                     beatProgress.setVisibility(View.VISIBLE);
                     karaBtn.setVisibility(View.INVISIBLE);
                     beatProgress.setProgress(0);
