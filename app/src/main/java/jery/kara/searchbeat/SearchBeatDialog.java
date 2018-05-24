@@ -67,10 +67,7 @@ public class SearchBeatDialog extends DialogFragment implements View.OnClickList
         a.getWindow().setGravity(Gravity.BOTTOM);
         a.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
         a.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        if (getActivity() instanceof KaraQueueActivity){
-            a.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-        }
-
+        a.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         a.setCanceledOnTouchOutside(true);
 
         init(view);

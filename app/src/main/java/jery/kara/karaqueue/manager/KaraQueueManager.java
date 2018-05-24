@@ -127,6 +127,7 @@ public class KaraQueueManager extends KaraManager {
     public void onChooseSongClicked(){
         switch (currentUser.type){
             case User.TYPE_BANNED:
+                break;
             case User.TYPE_VIWER:
                 showSearchDailog();
                 break;

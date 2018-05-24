@@ -161,29 +161,29 @@ public class KaraQueueActivity extends AppCompatActivity {
     }
 
     void loadData(){
-//        User u = new User();
-//        u.id = 0;
-//        u.role = User.ROLE_USER;
-//        u.type = User.TYPE_SINGER;
-//        u.name = "Ca sĩ đang hát";
-//        u.beatInfo.title = "Bài hát ca sĩ đang hát";
-//        if (currentUser.id == u.id){
-//            currentUser.type = u.type;
-//        }
-//        queueData.add(u);
-//
-//        for (int i = 1; i < 10; i++){
-//            u = new User();
-//            u.id = i;
-//            u.role = User.ROLE_USER;
-//            u.type = User.TYPE_WAITTING;
-//            u.name = "Ca sĩ đang đợi " + i;
-//            u.beatInfo.title = "Bài hát đang đợi " + i;
-//            if (currentUser.id == u.id){
-//                currentUser.type = u.type;
-//            }
-//            queueData.add(u);
-//        }
+        User u = new User();
+        u.id = 0;
+        u.role = User.ROLE_USER;
+        u.type = User.TYPE_SINGER;
+        u.name = "Ca sĩ đang hát";
+        u.beatInfo.title = "Bài hát ca sĩ đang hát";
+        if (currentUser.id == u.id){
+            currentUser.type = u.type;
+        }
+        queueData.add(u);
+
+        for (int i = 1; i < 10; i++){
+            u = new User();
+            u.id = i;
+            u.role = User.ROLE_USER;
+            u.type = User.TYPE_WAITTING;
+            u.name = "Ca sĩ đang đợi " + i;
+            u.beatInfo.title = "Bài hát đang đợi " + i;
+            if (currentUser.id == u.id){
+                currentUser.type = u.type;
+            }
+            queueData.add(u);
+        }
     }
 
     @Override
