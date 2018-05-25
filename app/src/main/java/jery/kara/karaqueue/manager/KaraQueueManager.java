@@ -1,24 +1,17 @@
 package jery.kara.karaqueue.manager;
 
-import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import jery.kara.R;
-import jery.kara.karaqueue.KaraQueueActivity;
-import jery.kara.karaqueue.fragment.KaraQueueDialog;
+import jery.kara.karaqueue.model.QueueItem;
 import jery.kara.karaqueue.model.User;
-import jery.kara.karaqueue.myview.PulsatorLayout;
-import jery.kara.lyric.myview.LyricView;
 import jery.kara.manager.KaraManager;
 import jery.kara.searchbeat.BeatInfo;
-import jery.kara.searchbeat.SearchBeatDialog;
 
 /**
  * Created by CPU11341-local on 08-May-18.
@@ -26,16 +19,17 @@ import jery.kara.searchbeat.SearchBeatDialog;
 
 public class KaraQueueManager extends KaraManager {
 
-    static final int STATE_SINGER_LOADING = 1;
-    static final int STATE_SINGING = 2;
+    private static final int STATE_SINGER_LOADING = 1;
+    private static final int STATE_SINGING = 2;
 
-    int state = STATE_SINGING;
+    private int state = STATE_SINGING;
 
-    List<User> queueData = new ArrayList<>();
-    User currentUser = new User();
+    private List<QueueItem> queueData = new ArrayList<>();
+    private QueueItem queueItem = new QueueItem();
+    private User currentUser = new User();
 
-    TextView btnOpenQueue;
-    TextView btnChooseSong;
+    private TextView btnOpenQueue;
+    private TextView btnChooseSong;
 
     private static KaraQueueManager instance;
     private KaraQueueManager(){}
@@ -46,11 +40,11 @@ public class KaraQueueManager extends KaraManager {
         return instance;
     }
 
-    public void setQueueData(List<User> queueData){
+    public void setQueueData(List<QueueItem> queueData){
         this.queueData = queueData;
     }
 
-    public List<User> getQueueData() {
+    public List<QueueItem> getQueueData() {
         return queueData;
     }
 
@@ -72,7 +66,9 @@ public class KaraQueueManager extends KaraManager {
 
     @Override
     protected void downloadSongStart() {
-
+        btnChooseSong.setEnabled(false);
+        btnChooseSong.setBackgroundResource(R.drawable.radius_choosesong_background);
+        btnChooseSong.setText("Đang tải bài hát: 0%");
     }
 
     @Override
@@ -84,7 +80,12 @@ public class KaraQueueManager extends KaraManager {
 
     @Override
     protected void downloadSongSuccess(BeatInfo beatInfo) {
-        joinToQueue(beatInfo);
+        queueItem.songName = beatInfo.title;
+        queueItem.userId = currentUser.id;
+        queueItem.username = currentUser.name;
+        queueItem.avatarURL = currentUser.avatarURL;
+
+        joinToQueue(queueItem);
     }
 
     @Override
@@ -107,8 +108,8 @@ public class KaraQueueManager extends KaraManager {
     //Chủ động dừng bài hát
     @Override
     protected void onBeatStop() {
-        removeFromQueue(currentUser);
-        User nextSinger = getNextSinger();
+        removeFromQueue(queueItem);
+        QueueItem nextSinger = getNextSinger();
         if (nextSinger != null){
             //Ca sĩ tiếp theo
         }
@@ -117,8 +118,8 @@ public class KaraQueueManager extends KaraManager {
     //Hát hết bài
     @Override
     protected void onBeatFinish() {
-        removeFromQueue(currentUser);
-        User nextSinger = getNextSinger();
+        removeFromQueue(queueItem);
+        QueueItem nextSinger = getNextSinger();
         if (nextSinger != null){
             //Ca sĩ tiếp theo
         }
@@ -134,53 +135,54 @@ public class KaraQueueManager extends KaraManager {
             case User.TYPE_SINGER:
                 stopSinging();
             case User.TYPE_WAITTING:
-                removeFromQueue(currentUser);
+                removeFromQueue(queueItem);
                 break;
         }
     }
 
     //Thêm vào hàng đợi
-    public void joinToQueue(BeatInfo beatInfo){
-        currentUser.beatInfo = beatInfo;
+    private void joinToQueue(QueueItem queueItem){
         currentUser.type = User.TYPE_WAITTING;
         onUserTypeChangeListener.onUserTypeChange(currentUser.type);
 
-        queueData.add(currentUser);
+        //Request Update queue
         onQueueChangeListener.onQueueChange();
 
         btnOpenQueue.setText("Cầm mic (" + queueData.size() + ")");
     }
 
     //Xóa khỏi hàng đợi
-    public void removeFromQueue(User user){
-        queueData.remove(user);
+    private void removeFromQueue(QueueItem queueItem){
+        //Request Update queue
         onQueueChangeListener.onQueueChange();
+
+        if (currentUser.type == User.TYPE_SINGER){
+            state = STATE_SINGER_LOADING;
+            onStateChangeListener.onStateChange(state);
+        }
 
         currentUser.type = User.TYPE_VIWER;
         onUserTypeChangeListener.onUserTypeChange(currentUser.type);
-
-        state = STATE_SINGER_LOADING;
-        onStateChangeListener.onStateChange(state);
 
         btnOpenQueue.setText("Cầm mic (" + queueData.size() + ")");
     }
 
     //Bắt đầu hát
-    void startSinging(){
+    private void startSinging(){
         currentUser.type = User.TYPE_SINGER;
         onUserTypeChangeListener.onUserTypeChange(currentUser.type);
         state = STATE_SINGING;
         onStateChangeListener.onStateChange(state);
     }
 
-    User getNextSinger(){
-        if (queueData.size() > 1){
+    private QueueItem getNextSinger(){
+        if (queueData.size() >= 1){
             return queueData.get(0);
         }
         return null;
     }
 
-    void stopSinging(){
+    private void stopSinging(){
         //Ngừng biểu diễn
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Thông báo");

@@ -24,5 +24,4 @@ public class User {
     public int id;
     public String name;
     public String avatarURL;
-    public BeatInfo beatInfo = new BeatInfo();
 }

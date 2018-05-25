@@ -1,13 +1,15 @@
 package jery.kara.karaqueue.adapter;
 
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -16,6 +18,7 @@ import java.util.List;
 
 import jery.kara.R;
 import jery.kara.karaqueue.manager.KaraQueueManager;
+import jery.kara.karaqueue.model.QueueItem;
 import jery.kara.karaqueue.model.User;
 
 /**
@@ -24,11 +27,11 @@ import jery.kara.karaqueue.model.User;
 
 public class QueueAdapter extends RecyclerView.Adapter {
 
-    private List<User> data;
+    private List<QueueItem> data;
     private AppCompatActivity context;
     private User currentUser = new User();
 
-    public QueueAdapter(AppCompatActivity context, List<User> data) {
+    public QueueAdapter(AppCompatActivity context, List<QueueItem> data) {
         this.data = data;
         this.context = context;
         currentUser = KaraQueueManager.getInstance().getCurrentUser();
@@ -36,36 +39,35 @@ public class QueueAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemViewType(int position) {
-        return data.get(position).type;
+        return position;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
-            case User.TYPE_SINGER:
+            case 0:
                 return new SingerHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.queue_item_singer, parent, false));
-            case User.TYPE_WAITTING:
+            default:
                 return new WaittingHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.queue_item_waitting, parent, false));
         }
-        return null;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         int type = getItemViewType(position);
         switch (type) {
-            case User.TYPE_SINGER:
+            case 0:
                 bindSinger((SingerHolder) holder);
                 break;
-            case User.TYPE_WAITTING:
+            default:
                 bindWaitting((WaittingHolder) holder, position);
                 break;
         }
     }
 
     private void bindSinger(SingerHolder holder) {
-        holder.txtSongName.setText(data.get(0).beatInfo.title);
-        holder.txtUserName.setText(data.get(0).name);
+        holder.txtSongName.setText(data.get(0).songName);
+        holder.txtUserName.setText(data.get(0).username);
         Glide.with(context)
                 .load(data.get(0).avatarURL)
                 .apply(RequestOptions.circleCropTransform())
@@ -74,7 +76,24 @@ public class QueueAdapter extends RecyclerView.Adapter {
         holder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                KaraQueueManager.getInstance().removeFromQueue(data.get(0));
+                PopupMenu popup = new PopupMenu(context, view);
+                //Inflating the Popup using xml file
+                popup.getMenuInflater().inflate(R.menu.singer_popup_menu, popup.getMenu());
+
+                //registering popup with OnMenuItemClickListener
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if (item.getTitle().equals("Xóa")){
+                            Toast.makeText(context, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                        }
+                        if (item.getTitle().equals("Chặn")){
+                            Toast.makeText(context, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                        }
+
+                        return true;
+                    }
+                });
+                popup.show();
             }
         });
 
@@ -83,24 +102,19 @@ public class QueueAdapter extends RecyclerView.Adapter {
         }
     }
 
-    private void bindWaitting(WaittingHolder holder, final int position) {
+    private void bindWaitting(final WaittingHolder holder, final int position) {
         holder.txtQueueNum.setText(String.valueOf(position));
-        holder.txtSongName.setText(data.get(position).beatInfo.title);
-        holder.txtUserName.setText(data.get(position).name);
+        holder.txtSongName.setText(data.get(position).songName);
+        holder.txtUserName.setText(data.get(position).username);
         Glide.with(context)
                 .load(data.get(position).avatarURL)
                 .apply(RequestOptions.circleCropTransform())
                 .apply(RequestOptions.placeholderOf(R.drawable.user_avatar).error(R.drawable.user_avatar))
                 .into(holder.userAvatar);
-        holder.remove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                KaraQueueManager.getInstance().removeFromQueue(data.get(position));
-            }
-        });
         if (currentUser.role == User.ROLE_MANAGER){
             holder.remove.setVisibility(View.VISIBLE);
         }
+
     }
 
     @Override

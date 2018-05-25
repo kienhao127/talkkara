@@ -24,6 +24,7 @@ import java.util.List;
 import jery.kara.R;
 import jery.kara.karaqueue.adapter.QueueAdapter;
 import jery.kara.karaqueue.manager.KaraQueueManager;
+import jery.kara.karaqueue.model.QueueItem;
 import jery.kara.karaqueue.model.User;
 
 /**
@@ -34,7 +35,7 @@ public class KaraQueueDialog extends DialogFragment {
     TextView btnChooseSong;
     RecyclerView karaQueue;
     QueueAdapter adapter;
-    List<User> queueData = new ArrayList<>();
+    List<QueueItem> queueData = new ArrayList<>();
     TextView lbl_listQueue;
     User currentUser = new User();
     TextView lbl_loadingQueue;
@@ -57,19 +58,17 @@ public class KaraQueueDialog extends DialogFragment {
         init(view);
 
         KaraQueueManager.getInstance().setBtnChooseSong(btnChooseSong);
+
+        //Update Queue
         KaraQueueManager.getInstance().setOnQueueChangeListener(new KaraQueueManager.OnQueueChangeListener() {
             @Override
             public void onQueueChange() {
                 adapter.notifyDataSetChanged();
                 karaQueue.scheduleLayoutAnimation();
-                lbl_listQueue.setText("Lượt cầm mic (" + queueData.size() + ")");
-                if (queueData == null || queueData.size() == 0){
-                    lbl_loadingQueue.setVisibility(View.VISIBLE);
-                } else {
-                    lbl_loadingQueue.setVisibility(View.INVISIBLE);
-                }
+                updateQueueSize(queueData.size());
             }
         });
+
         KaraQueueManager.getInstance().setOnUserTypeChangeListener(new KaraQueueManager.OnUserTypeChangeListener() {
             @Override
             public void onUserTypeChange(int userType) {
@@ -84,11 +83,6 @@ public class KaraQueueDialog extends DialogFragment {
         karaQueue.setLayoutAnimation(animation);
         adapter = new QueueAdapter((AppCompatActivity) getActivity(), queueData);
         karaQueue.setAdapter(adapter);
-        if (queueData == null || queueData.size() == 0){
-            lbl_loadingQueue.setVisibility(View.VISIBLE);
-        } else {
-            lbl_loadingQueue.setVisibility(View.INVISIBLE);
-        }
 
         btnChooseSong.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,18 +99,22 @@ public class KaraQueueDialog extends DialogFragment {
     private void init(View view) {
         lbl_loadingQueue = (TextView) view.findViewById(R.id.loading_queue);
         lbl_listQueue = (TextView) view.findViewById(R.id.lbl_listQueue);
-        lbl_listQueue.setText("Lượt cầm mic (" + queueData.size() + ")");
+        updateQueueSize(queueData.size());
         btnChooseSong = (TextView) view.findViewById(R.id.lbl_chooseSong);
         karaQueue = view.findViewById(R.id.karaQueue);
     }
 
+    void updateQueueSize(int size){
+        lbl_listQueue.setText("Lượt cầm mic (" + size + ")");
+        if (queueData == null || queueData.size() == 0){
+            lbl_loadingQueue.setVisibility(View.VISIBLE);
+        } else {
+            lbl_loadingQueue.setVisibility(View.INVISIBLE);
+        }
+    }
+
     void setButtonChooseSongType(){
         switch (currentUser.type){
-            case User.TYPE_BANNED:
-                btnChooseSong.setText("Bạn đã bị cấm cầm mic");
-                btnChooseSong.setBackgroundResource(R.drawable.radius_choosesong_banned_background);
-                btnChooseSong.setEnabled(false);
-                break;
             case User.TYPE_VIWER:
                 btnChooseSong.setText("Chọn bài hát");
                 btnChooseSong.setBackgroundResource(R.drawable.radius_choosesong_background);

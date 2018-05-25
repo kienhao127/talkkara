@@ -16,6 +16,7 @@ import jery.kara.R;
 import jery.kara.karapersonal.manager.KaraPersonalManager;
 import jery.kara.karaqueue.fragment.KaraQueueDialog;
 import jery.kara.karaqueue.manager.KaraQueueManager;
+import jery.kara.karaqueue.model.QueueItem;
 import jery.kara.karaqueue.model.User;
 import jery.kara.karaqueue.myview.PulsatorLayout;
 import jery.kara.lyric.myview.LyricView;
@@ -42,7 +43,7 @@ public class KaraQueueActivity extends AppCompatActivity {
     boolean isCameraOn = false;
 
     User currentUser = new User();
-    private List<User> queueData = new ArrayList<>();
+    private List<QueueItem> queueData = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,27 +162,17 @@ public class KaraQueueActivity extends AppCompatActivity {
     }
 
     void loadData(){
-        User u = new User();
-        u.id = 0;
-        u.role = User.ROLE_USER;
-        u.type = User.TYPE_SINGER;
-        u.name = "Ca sĩ đang hát";
-        u.beatInfo.title = "Bài hát ca sĩ đang hát";
-        if (currentUser.id == u.id){
-            currentUser.type = u.type;
-        }
+        QueueItem u = new QueueItem();
+        u.userId = 0;
+        u.username = "Ca sĩ đang hát";
+        u.songName = "Bài hát ca sĩ đang hát";
         queueData.add(u);
 
         for (int i = 1; i < 10; i++){
-            u = new User();
-            u.id = i;
-            u.role = User.ROLE_USER;
-            u.type = User.TYPE_WAITTING;
-            u.name = "Ca sĩ đang đợi " + i;
-            u.beatInfo.title = "Bài hát đang đợi " + i;
-            if (currentUser.id == u.id){
-                currentUser.type = u.type;
-            }
+            u = new QueueItem();
+            u.userId = i;
+            u.username = "Ca sĩ đang đợi " + i;
+            u.songName = "Bài hát đang đợi " + i;
             queueData.add(u);
         }
     }
@@ -189,8 +180,8 @@ public class KaraQueueActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        KaraPersonalManager.getInstance().onActionStopSong();
-        KaraPersonalManager.getInstance().deleteAllFile();
-        KaraPersonalManager.getInstance().cancelDownload();
+        KaraQueueManager.getInstance().onActionStopSong();
+        KaraQueueManager.getInstance().deleteAllFile();
+        KaraQueueManager.getInstance().cancelDownload();
     }
 }

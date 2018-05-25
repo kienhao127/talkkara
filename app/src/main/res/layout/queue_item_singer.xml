@@ -50,6 +50,5 @@
         android:layout_height="50dp"
         android:layout_alignParentEnd="true"
         android:padding="10dp"
-        android:src="@drawable/ic_remove"
-        android:visibility="invisible"/>
+        android:src="@drawable/ic_more"/>
 </RelativeLayout>
