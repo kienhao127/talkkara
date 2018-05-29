@@ -5,27 +5,27 @@ package jery.kara.lyric.model;
  */
 
 public class Sentence {
-    String content;
-    long fromTime;
+    private String mContent;
+    private long mFromTime;
 
     public String getContent() {
-        return content;
+        return mContent;
     }
 
     public void setContent(String content) {
-        this.content = content;
+        mContent = content;
     }
 
     public long getFromTime() {
-        return fromTime;
+        return mFromTime;
     }
 
     public void setFromTime(long fromTime) {
-        this.fromTime = fromTime;
+        mFromTime = fromTime;
     }
 
     public Sentence(String content, long fromTime) {
-        this.content = content;
-        this.fromTime = fromTime;
+        mContent = content;
+        mFromTime = fromTime;
     }
 }

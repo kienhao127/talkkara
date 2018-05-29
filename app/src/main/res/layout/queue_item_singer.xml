@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="10dp"
     android:layout_marginBottom="10dp">
-    <jery.kara.karaqueue.myview.EqualizerLayout
+    <jery.kara.karaqueue.view.EqualizerLayout
         android:orientation="horizontal"
         android:id="@+id/queue_first"
         android:padding="15dp"

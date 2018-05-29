@@ -1,11 +1,9 @@
-package jery.kara.lyric.myview;
+package jery.kara.lyric.view;
 
 import android.animation.Animator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -27,19 +25,19 @@ import jery.kara.R;
 
 public class LyricView extends LinearLayout{
 
-    ArrayList<TextView> cacheTextView = new ArrayList<>();
-    TextView highlghtTextView;
-    TextView waitingTextView;
-    static int MAX_ANIM_DURATION = 1000;
-    static int DEFAULT_HIGHLIGHT_COLOR = Color.parseColor("#76D572");
-    static int DEFAULT_WAITTING_COLOR = Color.parseColor("#FFFFFF");
-    String tmpContent = null;
-    View parentView;
-    FrameLayout frameLayout;
-    int duration = 0;
-    boolean isStarting = false;
-    int highlightColor;
-    int wattingColor;
+    private ArrayList<TextView> cacheTextView = new ArrayList<>();
+    private TextView highlghtTextView;
+    private TextView waitingTextView;
+    private static int MAX_ANIM_DURATION = 1000;
+    private static int DEFAULT_HIGHLIGHT_COLOR = Color.parseColor("#76D572");
+    private static int DEFAULT_WAITTING_COLOR = Color.parseColor("#FFFFFF");
+    private String tmpContent = null;
+    private View parentView;
+    private FrameLayout frameLayout;
+    private int duration = 0;
+    private boolean isStarting = false;
+    private int highlightColor;
+    private int wattingColor;
 
     public LyricView(Context context) {
         this(context, null);
@@ -58,18 +56,18 @@ public class LyricView extends LinearLayout{
         wattingColor = attributes.getColor(R.styleable.LyricView_normalColor, DEFAULT_WAITTING_COLOR);
     }
 
-    void init(){
+    private void init(){
         LayoutInflater inflater = LayoutInflater.from(getContext());
         parentView = inflater.inflate(R.layout.lyric_view_layout, this);
         frameLayout = (FrameLayout) parentView.findViewById(R.id.container);
     }
 
-    void reuseTextView(TextView view){
+    private void reuseTextView(TextView view){
         frameLayout.removeView(view);
         cacheTextView.add(view);
     }
 
-    TextView getAvailableTextView(){
+    private TextView getAvailableTextView(){
         TextView view = null;
         if (cacheTextView.size() <= 0){
             view = new TextView(getContext());
@@ -93,7 +91,7 @@ public class LyricView extends LinearLayout{
         return view;
     }
 
-    void addToView(TextView view) {
+    private void addToView(TextView view) {
         float py;
         ViewGroup.LayoutParams params = frameLayout.getLayoutParams();
 
@@ -110,14 +108,14 @@ public class LyricView extends LinearLayout{
         frameLayout.addView(view);
     }
 
-    long getAnimDuration() {
+    private long getAnimDuration() {
         if (duration < MAX_ANIM_DURATION){
             return duration;
         }
         return MAX_ANIM_DURATION;
     }
 
-    void moveOut(){
+    private void moveOut(){
         Animator.AnimatorListener animationListener = new Animator.AnimatorListener() {
 
             @Override
@@ -148,7 +146,7 @@ public class LyricView extends LinearLayout{
                 .start();
     }
 
-    void moveUp(){
+    private void moveUp(){
         waitingTextView.setTextColor(highlightColor);
         Animator.AnimatorListener animationListener = new Animator.AnimatorListener() {
 
@@ -180,17 +178,17 @@ public class LyricView extends LinearLayout{
                 .start();
     }
 
-    void onMoveOutEnd(TextView view){
+    private void onMoveOutEnd(TextView view){
         view.setText("");
         reuseTextView(view);
     }
 
-    void onMoveUpEnd(TextView view){
+    private void onMoveUpEnd(TextView view){
         highlghtTextView = view;
         pushWaitingTextView();
     }
 
-    void pushWaitingTextView(){
+    private void pushWaitingTextView(){
         if (tmpContent != null){
             waitingTextView = getAvailableTextView();
             waitingTextView.setText(tmpContent);

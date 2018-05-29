@@ -1,4 +1,4 @@
-package jery.kara.karaqueue.myview;
+package jery.kara.karaqueue.view;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
@@ -11,10 +11,6 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -34,24 +30,15 @@ import jery.kara.R;
 public class PulsatorLayout extends RelativeLayout {
     public static final int INFINITE = 0;
 
-    public static final int INTERP_LINEAR = 0;
-    public static final int INTERP_ACCELERATE = 1;
-    public static final int INTERP_DECELERATE = 2;
-    public static final int INTERP_ACCELERATE_DECELERATE = 3;
-
     private static final int DEFAULT_COUNT = 4;
     private static final int DEFAULT_COLOR = Color.rgb(0, 116, 193);
     private static final int DEFAULT_DURATION = 7000;
     private static final int DEFAULT_REPEAT = INFINITE;
-    private static final boolean DEFAULT_START_FROM_SCRATCH = true;
-    private static final int DEFAULT_INTERPOLATOR = INTERP_LINEAR;
 
     private int mCount;
     private int mDuration;
     private int mRepeat;
-    private boolean mStartFromScratch;
     private int mColor;
-    private int mInterpolator;
 
     private final List<View> mViews = new ArrayList<>();
     private AnimatorSet mAnimatorSet;
@@ -65,37 +52,14 @@ public class PulsatorLayout extends RelativeLayout {
 
     private ImageView img_avatar;
 
-    /**
-     * Simple constructor to use when creating a view from code.
-     *
-     * @param context The Context the view is running in, through which it can access the current
-     *                theme, resources, etc.
-     */
     public PulsatorLayout(Context context) {
         this(context, null, 0);
     }
 
-    /**
-     * Constructor that is called when inflating a view from XML.
-     *
-     * @param context The Context the view is running in, through which it can access the current
-     *                theme, resources, etc.
-     * @param attrs The attributes of the XML tag that is inflating the view.
-     */
     public PulsatorLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    /**
-     * Perform inflation from XML and apply a class-specific base style from a theme attribute.
-     *
-     * @param context The Context the view is running in, through which it can access the current
-     *                theme, resources, etc.
-     * @param attrs The attributes of the XML tag that is inflating the view.
-     * @param defStyleAttr An attribute in the current theme that contains a reference to a style
-     *                     resource that supplies default values for the view. Can be 0 to not look
-     *                     for defaults.
-     */
     public PulsatorLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
@@ -109,20 +73,14 @@ public class PulsatorLayout extends RelativeLayout {
         mCount = DEFAULT_COUNT;
         mDuration = DEFAULT_DURATION;
         mRepeat = DEFAULT_REPEAT;
-        mStartFromScratch = DEFAULT_START_FROM_SCRATCH;
         mColor = DEFAULT_COLOR;
-        mInterpolator = DEFAULT_INTERPOLATOR;
 
         try {
             mCount = attr.getInteger(R.styleable.Pulsator4Droid_pulse_count, DEFAULT_COUNT);
             mDuration = attr.getInteger(R.styleable.Pulsator4Droid_pulse_duration,
                     DEFAULT_DURATION);
             mRepeat = attr.getInteger(R.styleable.Pulsator4Droid_pulse_repeat, DEFAULT_REPEAT);
-            mStartFromScratch = attr.getBoolean(R.styleable.Pulsator4Droid_pulse_startFromScratch,
-                    DEFAULT_START_FROM_SCRATCH);
             mColor = attr.getColor(R.styleable.Pulsator4Droid_pulse_color, DEFAULT_COLOR);
-            mInterpolator = attr.getInteger(R.styleable.Pulsator4Droid_pulse_interpolator,
-                    DEFAULT_INTERPOLATOR);
         } finally {
             attr.recycle();
         }
@@ -154,7 +112,7 @@ public class PulsatorLayout extends RelativeLayout {
 
         mAvatarAnimatorSet = new AnimatorSet();
         mAvatarAnimatorSet.playTogether(animators);
-        mAvatarAnimatorSet.setInterpolator(createInterpolator(mInterpolator));
+        mAvatarAnimatorSet.setInterpolator(new LinearInterpolator());
         mAvatarAnimatorSet.setDuration(500);
     }
 
@@ -269,28 +227,6 @@ public class PulsatorLayout extends RelativeLayout {
         }
     }
 
-    /**
-     * Get current interpolator type used for animating.
-     *
-     * @return Interpolator type as int
-     */
-    public int getInterpolator() {
-        return mInterpolator;
-    }
-
-    /**
-     * Set current interpolator used for animating.
-     *
-     * @param type Interpolator type as int
-     */
-    public void setInterpolator(int type) {
-        if (type != mInterpolator) {
-            mInterpolator = type;
-            reset();
-            invalidate();
-        }
-    }
-
     public void setAvatarUrl(String avatarUrl){
         this.avatarUrl = avatarUrl;
         Glide.with(getContext())
@@ -373,7 +309,7 @@ public class PulsatorLayout extends RelativeLayout {
 
         mAnimatorSet = new AnimatorSet();
         mAnimatorSet.playTogether(animators);
-        mAnimatorSet.setInterpolator(createInterpolator(mInterpolator));
+        mAnimatorSet.setInterpolator(new LinearInterpolator());
         mAnimatorSet.setDuration(mDuration);
         mAnimatorSet.addListener(mAnimatorListener);
     }
@@ -389,25 +325,6 @@ public class PulsatorLayout extends RelativeLayout {
 
         if (isStarted) {
             startEffect();
-        }
-    }
-
-    /**
-     * Create interpolator from type.
-     *
-     * @param type Interpolator type as int
-     * @return Interpolator object of type
-     */
-    private static Interpolator createInterpolator(int type) {
-        switch (type) {
-            case INTERP_ACCELERATE:
-                return new AccelerateInterpolator();
-            case INTERP_DECELERATE:
-                return new DecelerateInterpolator();
-            case INTERP_ACCELERATE_DECELERATE:
-                return new AccelerateDecelerateInterpolator();
-            default:
-                return new LinearInterpolator();
         }
     }
 

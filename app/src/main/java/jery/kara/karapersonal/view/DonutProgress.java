@@ -1,4 +1,4 @@
-package jery.kara.karapersonal.myview;
+package jery.kara.karapersonal.view;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -11,7 +11,6 @@ import android.support.annotation.Nullable;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import jery.kara.R;

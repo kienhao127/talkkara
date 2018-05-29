@@ -10,8 +10,8 @@ import android.widget.ImageView;
 
 import jery.kara.R;
 import jery.kara.karapersonal.manager.KaraPersonalManager;
-import jery.kara.karapersonal.myview.DonutProgress;
-import jery.kara.lyric.myview.LyricView;
+import jery.kara.karapersonal.view.DonutProgress;
+import jery.kara.lyric.view.LyricView;
 
 /**
  * Created by CPU11296-local on 1/8/2018.
@@ -23,9 +23,9 @@ public class KaraPersonalActivity extends AppCompatActivity {
     static final int STATE_DOWNLOADING = 2;
     static final int STATE_PLAYING = 3;
 
-    ImageView karaBtn;
-    DonutProgress beatProgress;
-    LyricView lyricView;
+    private ImageView karaBtn;
+    private DonutProgress beatProgress;
+    private LyricView lyricView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

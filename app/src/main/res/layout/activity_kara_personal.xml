@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:layout_marginTop="70dp">
-        <jery.kara.lyric.myview.LyricView
+        <jery.kara.lyric.view.LyricView
             android:id="@+id/lyricView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
         android:layout_alignParentRight="true"
         android:layout_margin="10dp" />
 
-    <jery.kara.karapersonal.myview.DonutProgress
+    <jery.kara.karapersonal.view.DonutProgress
         android:id="@+id/beatProgress"
         android:layout_width="40dp"
         android:layout_height="40dp"

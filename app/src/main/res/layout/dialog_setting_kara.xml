@@ -90,7 +90,7 @@
         android:layout_alignParentEnd="true"
         android:gravity="center_vertical|center_horizontal"
         android:text="0"/>
-    <jery.kara.settingbeat.myview.IndicatorSeekBar
+    <jery.kara.settingbeat.view.IndicatorSeekBar
         android:id="@+id/tone_seekbar"
         android:layout_width="match_parent"
         android:layout_height="30dp"

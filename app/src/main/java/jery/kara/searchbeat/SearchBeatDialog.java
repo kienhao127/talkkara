@@ -49,12 +49,12 @@ public class SearchBeatDialog extends DialogFragment implements View.OnClickList
 
     private static final int PERMISSION_REQUEST_CODE = 1;
 
-    RecyclerView rv;
-    SearchBeatAdapter adapter;
+    private RecyclerView rv;
+    private SearchBeatAdapter adapter;
     private List<BeatInfo> data = new ArrayList<>();
     boolean isSearch = false;
-    EditText searchBox;
-    Toolbar toolbar;
+    private EditText searchBox;
+    private Toolbar toolbar;
     public TextView lbl_loading;
 
     @NonNull

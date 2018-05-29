@@ -15,8 +15,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import jery.kara.R;
-import jery.kara.manager.KaraManager;
-import jery.kara.settingbeat.myview.IndicatorSeekBar;
+import jery.kara.settingbeat.view.IndicatorSeekBar;
 
 /**
  * Created by CPU11341-local on 18-Apr-18.

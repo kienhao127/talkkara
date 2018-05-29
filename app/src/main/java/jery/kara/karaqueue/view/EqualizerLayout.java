@@ -1,4 +1,4 @@
-package jery.kara.karaqueue.myview;
+package jery.kara.karaqueue.view;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
@@ -8,22 +8,13 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.os.Build;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;
-
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/btn_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/radius_button_open_queue_background"
+        android:drawableLeft="@drawable/ic_microphone"
+        android:drawablePadding="5dp"
+        android:textColor="#FFF"
+        android:padding="7dp"
+        android:textSize="15dp"
+        android:text="Cầm mic (0)"
+        android:layout_centerVertical="true"/>
+</RelativeLayout>

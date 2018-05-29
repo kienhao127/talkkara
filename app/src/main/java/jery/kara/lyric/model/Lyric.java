@@ -8,36 +8,36 @@ import java.util.Comparator;
  */
 
 public class Lyric {
-    long length;
-    ArrayList<Sentence> arrSentences = new ArrayList<>();
+    private long mLength;
+    private ArrayList<Sentence> mArrSentences = new ArrayList<>();
 
     public void addSentence(String content, long time) {
-        arrSentences.add(new Sentence(content, time));
+        mArrSentences.add(new Sentence(content, time));
     }
 
     public Lyric() {
     }
 
     public long getLength() {
-        return length;
+        return mLength;
     }
 
     public void setLength(long length) {
-        this.length = length;
+        mLength = length;
     }
 
     public ArrayList<Sentence> getArrSentences() {
-        return arrSentences;
+        return mArrSentences;
     }
 
     public void setArrSentences(ArrayList<Sentence> arrSentences) {
-        this.arrSentences = arrSentences;
+        mArrSentences = arrSentences;
     }
 
     public static class SentenceComparator implements Comparator<Sentence> {
         @Override
         public int compare(Sentence sent1, Sentence sent2) {
-            return (int) (sent1.fromTime - sent2.fromTime);
+            return (int) (sent1.getFromTime() - sent2.getFromTime());
         }
     }
 }

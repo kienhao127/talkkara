@@ -1,6 +1,5 @@
 package jery.kara.karapersonal.manager;
 
-import jery.kara.lyric.myview.LyricView;
 import jery.kara.manager.KaraManager;
 import jery.kara.searchbeat.BeatInfo;
 
@@ -22,13 +21,13 @@ public class KaraPersonalManager extends KaraManager {
         return instance;
     }
 
-    static final int STATE_NONE = 1;
-    static final int STATE_DOWNLOADING = 2;
-    static final int STATE_PLAYING = 3;
+    private static final int STATE_NONE = 1;
+    private static final int STATE_DOWNLOADING = 2;
+    private static final int STATE_PLAYING = 3;
 
-    int state = STATE_NONE;
+    private int state = STATE_NONE;
 
-    BeatInfo beatInfo;
+    private BeatInfo mBeatInfo;
 
     @Override
     protected void downloadSongStart() {
@@ -43,7 +42,7 @@ public class KaraPersonalManager extends KaraManager {
 
     @Override
     protected void downloadSongSuccess(BeatInfo beatInfo) {
-        this.beatInfo = beatInfo;
+        mBeatInfo = beatInfo;
         state = STATE_PLAYING;
         onStateChangeListener.onStateChange(state);
         prepareBeat(beatInfo.beatLocalPath);
@@ -78,8 +77,8 @@ public class KaraPersonalManager extends KaraManager {
         stopSync();
         state = STATE_PLAYING;
         onStateChangeListener.onStateChange(state);
-        prepareBeat(beatInfo.beatLocalPath);
-        prepareLyric(beatInfo.lyricLocalPath);
+        prepareBeat(mBeatInfo.beatLocalPath);
+        prepareLyric(mBeatInfo.lyricLocalPath);
         startSync();
     }
 

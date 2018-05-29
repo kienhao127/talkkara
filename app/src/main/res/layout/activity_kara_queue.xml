@@ -7,110 +7,54 @@
     xmlns:custom="http://schemas.android.com/apk/res-auto"
     tools:context="jery.kara.karaqueue.KaraQueueActivity"
     android:background="@drawable/queue_background">
+
+    <jery.kara.karaqueue.view.PulsatorLayout
+        android:id="@+id/pulsator"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        app:pulse_color="#FFFFFF"
+        app:pulse_count="4"
+        app:pulse_duration="2000"
+        app:pulse_repeat="0">
+    </jery.kara.karaqueue.view.PulsatorLayout>
+
+    <jery.kara.karaqueue.view.WattingSingerLayout
+        android:id="@+id/watting_singer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
+
     <RelativeLayout
-        android:id="@+id/loading_new_singer_layout"
+        android:id="@+id/lyric_layout"
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:layout_marginTop="70dp">
-        <ImageView
-            android:id="@+id/img_micro"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_centerInParent="true"
-            android:src="@drawable/ic_microphone" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="Đang đợi ca sĩ tiếp theo cầm mic..."
-            android:layout_below="@id/img_micro"
-            android:textColor="#FFF"
-            android:textSize="15dp"
-            android:gravity="center"/>
-    </RelativeLayout>
-    <RelativeLayout
-        android:id="@+id/singer_layout"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_marginTop="70dp">
-
-        <TextView
-            android:id="@+id/lbl_songName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:gravity="center"
-            android:text="Tên bài hát"
-            android:textColor="#FFF"
-            android:textSize="20dp" />
-        <jery.kara.lyric.myview.LyricView
+        <jery.kara.lyric.view.LyricView
             android:id="@+id/lyricView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             custom:highlightColor="@color/colorPrimary"
             custom:lyricTextSize="15dp"
             custom:normalColor="#FFFFFF" />
-
-        <jery.kara.karaqueue.myview.PulsatorLayout
-            android:id="@+id/pulsator"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            app:pulse_color="#FFFFFF"
-            app:pulse_count="4"
-            app:pulse_duration="2000"
-            app:pulse_interpolator="Decelerate"
-            app:pulse_repeat="0"
-            app:pulse_startFromScratch="false">
-        </jery.kara.karaqueue.myview.PulsatorLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:id="@+id/setting_layout"
-            android:layout_below="@id/pulsator"
-            android:gravity="center_horizontal">
-
-            <ImageView
-                android:id="@+id/img_camera"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:src="@drawable/ic_camera"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"/>
-
-            <ImageView
-                android:id="@+id/img_setting"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:src="@drawable/ic_setting"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"/>
-
-            <ImageView
-                android:id="@+id/img_close"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:src="@drawable/ic_remove"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"/>
-        </LinearLayout>
     </RelativeLayout>
 
-    <TextView
+    <ImageView
+        android:id="@+id/img_setting"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_setting"
+        android:layout_above="@id/btn_open_queue"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="5dp"
+        />
+
+    <jery.kara.karaqueue.view.ButtonOpenQueue
         android:id="@+id/btn_open_queue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:background="#70000000"
-        android:drawableLeft="@drawable/ic_microphone"
-        android:drawablePadding="5dp"
-        android:textColor="#FFF"
-        android:padding="7dp"
-        android:textSize="15dp"
-        android:text="Cầm mic (0)"
-        android:layout_centerVertical="true"/>
+        android:layout_alignParentBottom="true"/>
 </RelativeLayout>

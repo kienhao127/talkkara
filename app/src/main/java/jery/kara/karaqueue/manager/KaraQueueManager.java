@@ -10,6 +10,7 @@ import java.util.List;
 import jery.kara.R;
 import jery.kara.karaqueue.model.QueueItem;
 import jery.kara.karaqueue.model.User;
+import jery.kara.karaqueue.view.ButtonOpenQueue;
 import jery.kara.manager.KaraManager;
 import jery.kara.searchbeat.BeatInfo;
 
@@ -28,7 +29,7 @@ public class KaraQueueManager extends KaraManager {
     private QueueItem queueItem = new QueueItem();
     private User currentUser = new User();
 
-    private TextView btnOpenQueue;
+    private ButtonOpenQueue btnOpenQueue;
     private TextView btnChooseSong;
 
     private static KaraQueueManager instance;
@@ -56,7 +57,7 @@ public class KaraQueueManager extends KaraManager {
         return currentUser;
     }
 
-    public void setBtnOpenQueue(TextView btnOpenQueue) {
+    public void setBtnOpenQueue(ButtonOpenQueue btnOpenQueue) {
         this.btnOpenQueue = btnOpenQueue;
     }
 
@@ -148,7 +149,7 @@ public class KaraQueueManager extends KaraManager {
         //Request Update queue
         onQueueChangeListener.onQueueChange();
 
-        btnOpenQueue.setText("Cầm mic (" + queueData.size() + ")");
+        btnOpenQueue.setQueueSize(queueData.size());
     }
 
     //Xóa khỏi hàng đợi
@@ -164,7 +165,7 @@ public class KaraQueueManager extends KaraManager {
         currentUser.type = User.TYPE_VIWER;
         onUserTypeChangeListener.onUserTypeChange(currentUser.type);
 
-        btnOpenQueue.setText("Cầm mic (" + queueData.size() + ")");
+        btnOpenQueue.setQueueSize(queueData.size());
     }
 
     //Bắt đầu hát

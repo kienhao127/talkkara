@@ -32,13 +32,13 @@ import jery.kara.karaqueue.model.User;
  */
 
 public class KaraQueueDialog extends DialogFragment {
-    TextView btnChooseSong;
-    RecyclerView karaQueue;
-    QueueAdapter adapter;
-    List<QueueItem> queueData = new ArrayList<>();
-    TextView lbl_listQueue;
-    User currentUser = new User();
-    TextView lbl_loadingQueue;
+    private TextView btnChooseSong;
+    private RecyclerView karaQueue;
+    private QueueAdapter adapter;
+    private List<QueueItem> queueData = new ArrayList<>();
+    private TextView lbl_listQueue;
+    private User currentUser = new User();
+    private TextView lbl_loadingQueue;
 
     @NonNull
     @Override
@@ -104,7 +104,7 @@ public class KaraQueueDialog extends DialogFragment {
         karaQueue = view.findViewById(R.id.karaQueue);
     }
 
-    void updateQueueSize(int size){
+    private void updateQueueSize(int size){
         lbl_listQueue.setText("Lượt cầm mic (" + size + ")");
         if (queueData == null || queueData.size() == 0){
             lbl_loadingQueue.setVisibility(View.VISIBLE);
@@ -113,7 +113,7 @@ public class KaraQueueDialog extends DialogFragment {
         }
     }
 
-    void setButtonChooseSongType(){
+    private void setButtonChooseSongType(){
         switch (currentUser.type){
             case User.TYPE_VIWER:
                 btnChooseSong.setText("Chọn bài hát");
@@ -133,7 +133,7 @@ public class KaraQueueDialog extends DialogFragment {
         }
     }
 
-    int getScreenHeight(){
+    private int getScreenHeight(){
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int height = displayMetrics.heightPixels;

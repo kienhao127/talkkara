@@ -12,11 +12,10 @@ import android.util.Log;
 import java.io.File;
 import java.io.IOException;
 
-import jery.kara.karapersonal.KaraPersonalActivity;
 import jery.kara.download.helper.TKaraDownloader;
 import jery.kara.settingbeat.SettingKaraDialog;
 import jery.kara.lyric.model.Lyric;
-import jery.kara.lyric.myview.LyricView;
+import jery.kara.lyric.view.LyricView;
 import jery.kara.lyric.utils.LyricUtils;
 import jery.kara.searchbeat.BeatInfo;
 import jery.kara.searchbeat.SearchBeatDialog;
@@ -27,22 +26,22 @@ import jery.kara.searchbeat.SearchBeatDialog;
 
 public abstract class KaraManager {
 
-    LyricView lyricView;
-    MediaPlayer mediaPlayer;
-    Lyric lyric;
+    private LyricView mLyricView;
+    private MediaPlayer mediaPlayer;
+    private Lyric lyric;
 
-    int indexOfTime;
-    long currentTime;
-    int beatDuration = 1;
+    private int indexOfTime;
+    private long currentTime;
+    private int beatDuration = 1;
 
-    TKaraDownloader tKaraDownloader;
-    protected Context context;
+    private TKaraDownloader tKaraDownloader;
+    protected Context mContext;
 
     //Settting Kara
-    int beatVol = 30;
-    int micVol = 70;
-    int tone = 2;
-    boolean isWhatUHearChecked = true;
+    private int beatVol = 30;
+    private int micVol = 70;
+    private int tone = 2;
+    private boolean isWhatUHearChecked = true;
 
     protected abstract void downloadSongStart();
     protected abstract void downloadSongProgress(int iProgress);
@@ -54,10 +53,10 @@ public abstract class KaraManager {
     protected abstract void onBeatFinish();
 
     public void setLyricView(LyricView lyricView) {
-        this.lyricView = lyricView;
+        mLyricView = lyricView;
     }
     public void setContext(Context context) {
-        this.context = context;
+        mContext = context;
     }
 
     protected void showSearchDailog(){
@@ -68,7 +67,7 @@ public abstract class KaraManager {
                 downloadFile(beatInfo);
             }
         });
-        searchBeatDialog.show(((Activity) context).getFragmentManager(), "searchBeatDialog");
+        searchBeatDialog.show(((Activity) mContext).getFragmentManager(), "searchBeatDialog");
     }
 
     public void showSettingDialog(){
@@ -108,7 +107,7 @@ public abstract class KaraManager {
                 onActionStopSong();
             }
         });
-        settingKaraDialog.show(((Activity) context).getFragmentManager(), "settingKaraDialog");
+        settingKaraDialog.show(((Activity) mContext).getFragmentManager(), "settingKaraDialog");
     }
 
     public void onActionStopSong(){
@@ -117,9 +116,9 @@ public abstract class KaraManager {
 
     protected void prepareLyric(String lyricLocalPath){
         lyric = LyricUtils.parseLyric(new File(lyricLocalPath), "UTF-8");
-        lyricView.start();
-        lyricView.receiveNewContent("--- *** ---", 500);
-        lyricView.receiveNewContent(lyric.getArrSentences().get(0).getContent(), 500);
+        mLyricView.start();
+        mLyricView.receiveNewContent("--- *** ---", 500);
+        mLyricView.receiveNewContent(lyric.getArrSentences().get(0).getContent(), 500);
         indexOfTime++;
     }
 
@@ -151,13 +150,13 @@ public abstract class KaraManager {
             mediaPlayer.pause();
             mediaPlayer.stop();
             mediaPlayer.release();
-            lyricView.stop();
+            mLyricView.stop();
             onBeatStop();
         }
     }
 
-    Handler handler;
-    Runnable runnable = new Runnable() {
+    private Handler handler;
+    private Runnable runnable = new Runnable() {
         @Override
         public void run() {
             doSync();
@@ -165,8 +164,8 @@ public abstract class KaraManager {
         }
     };
 
-    long beforeCurrentTime = 0;
-    void doSync(){
+    private long beforeCurrentTime = 0;
+    private void doSync(){
         currentTime = mediaPlayer.getCurrentPosition();
         float playingProgress = currentTime*100/beatDuration;
         onBeatPlaying((int)playingProgress);
@@ -175,9 +174,9 @@ public abstract class KaraManager {
             if (currentTime >= lrcTime){
                 if (indexOfTime < lyric.getArrSentences().size() - 1){
                     long time = lyric.getArrSentences().get(indexOfTime + 1).getFromTime() - lrcTime;
-                    lyricView.receiveNewContent(lyric.getArrSentences().get(indexOfTime + 1).getContent(), (int) time);
+                    mLyricView.receiveNewContent(lyric.getArrSentences().get(indexOfTime + 1).getContent(), (int) time);
                 } else {
-                    lyricView.receiveNewContent("", 500);
+                    mLyricView.receiveNewContent("", 500);
                 }
                 indexOfTime++;
             }
@@ -189,9 +188,9 @@ public abstract class KaraManager {
         beforeCurrentTime = currentTime;
     }
 
-    void downloadFile(final BeatInfo beatInfo){
+    private void downloadFile(final BeatInfo beatInfo){
 
-        tKaraDownloader = new TKaraDownloader(context);
+        tKaraDownloader = new TKaraDownloader(mContext);
         tKaraDownloader.setDownLoadSongResourceListener(new TKaraDownloader.DownLoadSongResourceListener() {
             @Override
             public void onDownloadSongResoureStart() {
@@ -233,8 +232,8 @@ public abstract class KaraManager {
         }
     }
 
-    protected void showAlertDialog(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+    private void showAlertDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle("Thông báo");
         builder.setMessage("Tải không thành công");
         builder.setCancelable(false);

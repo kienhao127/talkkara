@@ -5,42 +5,35 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import jery.kara.R;
-import jery.kara.karapersonal.manager.KaraPersonalManager;
 import jery.kara.karaqueue.fragment.KaraQueueDialog;
 import jery.kara.karaqueue.manager.KaraQueueManager;
 import jery.kara.karaqueue.model.QueueItem;
 import jery.kara.karaqueue.model.User;
-import jery.kara.karaqueue.myview.PulsatorLayout;
-import jery.kara.lyric.myview.LyricView;
+import jery.kara.karaqueue.view.ButtonOpenQueue;
+import jery.kara.karaqueue.view.PulsatorLayout;
+import jery.kara.karaqueue.view.WattingSingerLayout;
+import jery.kara.lyric.view.LyricView;
 
 public class KaraQueueActivity extends AppCompatActivity {
     static final int STATE_SINGER_LOADING = 1;
     static final int STATE_SINGING = 2;
 
-    int state = STATE_SINGING;
+    int state = STATE_SINGER_LOADING;
 
     PulsatorLayout pulsatorLayout;
     LyricView lyricView;
-    TextView btnOpenQueue;
-    TextView songName;
+    ButtonOpenQueue btnOpenQueue;
 
-    ImageView img_camera;
     ImageView img_setting;
-    ImageView img_close;
 
-    RelativeLayout loadingNewSingerLayout;
-    RelativeLayout singerLayout;
-    LinearLayout settingLayout;
-
-    boolean isCameraOn = false;
+    WattingSingerLayout wattingSingerLayout;
+    RelativeLayout lyricLayout;
 
     User currentUser = new User();
     private List<QueueItem> queueData = new ArrayList<>();
@@ -86,27 +79,12 @@ public class KaraQueueActivity extends AppCompatActivity {
                 karaQueueDialog.show(getFragmentManager(), "karaQueueDialog");
             }
         });
-        btnOpenQueue.setText("Cầm mic (" + queueData.size() + ")");
-
-        img_camera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                KaraQueueManager.getInstance().turnOnOffCamera(isCameraOn);
-                isCameraOn = !isCameraOn;
-            }
-        });
+        btnOpenQueue.setQueueSize(queueData.size());
 
         img_setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 KaraQueueManager.getInstance().showSettingDialog();
-            }
-        });
-
-        img_close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                KaraQueueManager.getInstance().onActionStopSong();
             }
         });
 
@@ -118,26 +96,23 @@ public class KaraQueueActivity extends AppCompatActivity {
         currentUser.type = currentUserType;
 
         if (state == STATE_SINGER_LOADING){
-            loadingNewSingerLayout.setVisibility(View.VISIBLE);
-            singerLayout.setVisibility(View.INVISIBLE);
+            wattingSingerLayout.setVisibility(View.VISIBLE);
+            wattingSingerLayout.setAvatarUrl("https://www.sideshowtoy.com/assets/products/400291-iron-man-mark-xlvi/lg/marvel-captain-america-civil-war-iron-man-mk-xlvi-legendary-scale-400291-05.jpg");
+            wattingSingerLayout.setNotify("Đang đợi Iron Man cầm mic");
+            lyricLayout.setVisibility(View.INVISIBLE);
+            pulsatorLayout.setVisibility(View.INVISIBLE);
         } else {
             switch (currentUserType) {
                 case User.TYPE_BANNED:
                 case User.TYPE_VIWER:
                 case User.TYPE_WAITTING:
-                    loadingNewSingerLayout.setVisibility(View.INVISIBLE);
-                    singerLayout.setVisibility(View.VISIBLE);
-                    lyricView.setVisibility(View.INVISIBLE);
-                    settingLayout.setVisibility(View.INVISIBLE);
-                    songName.setVisibility(View.VISIBLE);
+                    wattingSingerLayout.setVisibility(View.INVISIBLE);
+                    lyricLayout.setVisibility(View.INVISIBLE);
                     pulsatorLayout.setVisibility(View.VISIBLE);
                     break;
                 case User.TYPE_SINGER:
-                    loadingNewSingerLayout.setVisibility(View.INVISIBLE);
-                    singerLayout.setVisibility(View.VISIBLE);
-                    lyricView.setVisibility(View.VISIBLE);
-                    settingLayout.setVisibility(View.VISIBLE);
-                    songName.setVisibility(View.INVISIBLE);
+                    wattingSingerLayout.setVisibility(View.INVISIBLE);
+                    lyricLayout.setVisibility(View.VISIBLE);
                     pulsatorLayout.setVisibility(View.VISIBLE);
                     break;
             }
@@ -145,20 +120,16 @@ public class KaraQueueActivity extends AppCompatActivity {
     }
 
     void init(){
-        btnOpenQueue = (TextView) findViewById(R.id.btn_open_queue);
+        btnOpenQueue = (ButtonOpenQueue) findViewById(R.id.btn_open_queue);
         lyricView = (LyricView) findViewById(R.id.lyricView);
         pulsatorLayout = (PulsatorLayout) findViewById(R.id.pulsator);
+        pulsatorLayout.setAvatarUrl("https://www.sideshowtoy.com/wp-content/uploads/2018/04/marvel-avengers-infinity-war-thanos-sixth-scale-figure-hot-toys-feature-903429-1.jpg");
         pulsatorLayout.startEffect();
-        songName = (TextView) findViewById(R.id.lbl_songName);
 
-        img_camera = (ImageView) findViewById(R.id.img_camera);
         img_setting = (ImageView) findViewById(R.id.img_setting);
-        img_close = (ImageView) findViewById(R.id.img_close);
 
-        loadingNewSingerLayout = (RelativeLayout) findViewById(R.id.loading_new_singer_layout);
-        singerLayout = (RelativeLayout) findViewById(R.id.singer_layout);
-        settingLayout = (LinearLayout) findViewById(R.id.setting_layout);
-
+        wattingSingerLayout = (WattingSingerLayout) findViewById(R.id.watting_singer_layout);
+        lyricLayout = (RelativeLayout) findViewById(R.id.lyric_layout);
     }
 
     void loadData(){

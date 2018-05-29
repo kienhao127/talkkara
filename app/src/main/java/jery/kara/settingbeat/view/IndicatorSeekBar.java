@@ -1,4 +1,4 @@
-package jery.kara.settingbeat.myview;
+package jery.kara.settingbeat.view;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
