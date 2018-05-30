@@ -1,6 +1,8 @@
 package jery.kara.karapersonal.manager;
 
-import jery.kara.manager.KaraManager;
+import android.util.Log;
+
+import jery.kara.helper.KaraManager;
 import jery.kara.searchbeat.BeatInfo;
 
 /**
@@ -9,17 +11,7 @@ import jery.kara.searchbeat.BeatInfo;
 
 public class KaraPersonalManager extends KaraManager {
 
-    private static KaraPersonalManager instance;
-
-    private KaraPersonalManager() {
-    }
-
-    public static KaraPersonalManager getInstance() {
-        if (instance == null) {
-            instance = new KaraPersonalManager();
-        }
-        return instance;
-    }
+    public KaraPersonalManager(){}
 
     private static final int STATE_NONE = 1;
     private static final int STATE_DOWNLOADING = 2;
@@ -37,6 +29,7 @@ public class KaraPersonalManager extends KaraManager {
 
     @Override
     protected void downloadSongProgress(int iProgress) {
+        Log.d("Downloading", String.valueOf(iProgress));
         onProgressChangeListener.onProgressChange(iProgress);
     }
 
@@ -59,6 +52,7 @@ public class KaraPersonalManager extends KaraManager {
     @Override
     protected void onCancelDownload() {
         state = STATE_NONE;
+        onStateChangeListener.onStateChange(state);
     }
 
     @Override

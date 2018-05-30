@@ -11,7 +11,7 @@ import jery.kara.R;
 import jery.kara.karaqueue.model.QueueItem;
 import jery.kara.karaqueue.model.User;
 import jery.kara.karaqueue.view.ButtonOpenQueue;
-import jery.kara.manager.KaraManager;
+import jery.kara.helper.KaraManager;
 import jery.kara.searchbeat.BeatInfo;
 
 /**
@@ -25,11 +25,10 @@ public class KaraQueueManager extends KaraManager {
 
     private int state = STATE_SINGING;
 
-    private List<QueueItem> queueData = new ArrayList<>();
+    private List<QueueItem> mQueueData = new ArrayList<>();
     private QueueItem queueItem = new QueueItem();
     private User currentUser = new User();
 
-    private ButtonOpenQueue btnOpenQueue;
     private TextView btnChooseSong;
 
     private static KaraQueueManager instance;
@@ -42,11 +41,14 @@ public class KaraQueueManager extends KaraManager {
     }
 
     public void setQueueData(List<QueueItem> queueData){
-        this.queueData = queueData;
+        mQueueData = queueData;
+        if (onQueueChangeListener != null) {
+            onQueueChangeListener.onQueueChange(mQueueData);
+        }
     }
 
     public List<QueueItem> getQueueData() {
-        return queueData;
+        return mQueueData;
     }
 
     public void setCurrentUser(User currentUser) {
@@ -55,10 +57,6 @@ public class KaraQueueManager extends KaraManager {
 
     public User getCurrentUser() {
         return currentUser;
-    }
-
-    public void setBtnOpenQueue(ButtonOpenQueue btnOpenQueue) {
-        this.btnOpenQueue = btnOpenQueue;
     }
 
     public void setBtnChooseSong(TextView btnChooseSong) {
@@ -128,8 +126,6 @@ public class KaraQueueManager extends KaraManager {
 
     public void onChooseSongClicked(){
         switch (currentUser.type){
-            case User.TYPE_BANNED:
-                break;
             case User.TYPE_VIWER:
                 showSearchDailog();
                 break;
@@ -143,19 +139,17 @@ public class KaraQueueManager extends KaraManager {
 
     //Thêm vào hàng đợi
     private void joinToQueue(QueueItem queueItem){
+        //Request in queue API(queueItem)
+        //
+
         currentUser.type = User.TYPE_WAITTING;
         onUserTypeChangeListener.onUserTypeChange(currentUser.type);
-
-        //Request Update queue
-        onQueueChangeListener.onQueueChange();
-
-        btnOpenQueue.setQueueSize(queueData.size());
     }
 
     //Xóa khỏi hàng đợi
     private void removeFromQueue(QueueItem queueItem){
-        //Request Update queue
-        onQueueChangeListener.onQueueChange();
+        //Request out queue API(queueItem)
+        //
 
         if (currentUser.type == User.TYPE_SINGER){
             state = STATE_SINGER_LOADING;
@@ -164,8 +158,6 @@ public class KaraQueueManager extends KaraManager {
 
         currentUser.type = User.TYPE_VIWER;
         onUserTypeChangeListener.onUserTypeChange(currentUser.type);
-
-        btnOpenQueue.setQueueSize(queueData.size());
     }
 
     //Bắt đầu hát
@@ -177,15 +169,15 @@ public class KaraQueueManager extends KaraManager {
     }
 
     private QueueItem getNextSinger(){
-        if (queueData.size() >= 1){
-            return queueData.get(0);
+        if (mQueueData.size() >= 1){
+            return mQueueData.get(0);
         }
         return null;
     }
 
     private void stopSinging(){
         //Ngừng biểu diễn
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle("Thông báo");
         String notiString = "";
         builder.setMessage("Bạn có thật sự muốn ngừng biểu diễn?" + notiString);
@@ -206,17 +198,9 @@ public class KaraQueueManager extends KaraManager {
         alertDialog.show();
     }
 
-    public void turnOnOffCamera(boolean isOn){
-        if (isOn){
-            //turn off
-        } else {
-            //turn on
-        }
-    }
-
     private OnQueueChangeListener onQueueChangeListener;
     public interface OnQueueChangeListener{
-        void onQueueChange();
+        void onQueueChange(List<QueueItem> queueData);
     }
     public void setOnQueueChangeListener(OnQueueChangeListener onQueueChangeListener) {
         this.onQueueChangeListener = onQueueChangeListener;

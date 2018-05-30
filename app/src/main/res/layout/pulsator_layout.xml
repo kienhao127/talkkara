@@ -4,8 +4,8 @@
 
     <ImageView
         android:id="@+id/user_avatar"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:src="@drawable/user_avatar"/>

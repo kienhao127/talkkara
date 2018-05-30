@@ -7,7 +7,6 @@ import jery.kara.searchbeat.BeatInfo;
  */
 
 public class User {
-    public static final int TYPE_BANNED = 0;
     public static final int TYPE_VIWER = 1;
     public static final int TYPE_SINGER = 2;
     public static final int TYPE_WAITTING = 3;

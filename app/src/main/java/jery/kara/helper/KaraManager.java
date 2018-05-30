@@ -1,4 +1,4 @@
-package jery.kara.manager;
+package jery.kara.helper;
 
 import android.app.Activity;
 import android.content.Context;
@@ -203,7 +203,7 @@ public abstract class KaraManager {
             }
 
             @Override
-            public void onDownloadSongResourceError(String error) {
+            public void onDownloadSongResourceError() {
                 downloadSongError();
                 showAlertDialog();
             }
@@ -218,7 +218,7 @@ public abstract class KaraManager {
     }
 
     public void deleteAllFile(){
-        File dir = new File(Environment.getExternalStorageDirectory() + "/TalkTV");
+        File dir = new File(KaraUtils.getFolderPath());
         if (dir.isDirectory())
         {
             String[] children = dir.list();
@@ -249,7 +249,7 @@ public abstract class KaraManager {
 
     public void cancelDownload(){
         if (tKaraDownloader != null) {
-            tKaraDownloader.cancle();
+            tKaraDownloader.cancel();
         }
         onCancelDownload();
     }

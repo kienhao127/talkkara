@@ -179,8 +179,10 @@ public class LyricView extends LinearLayout{
     }
 
     private void onMoveOutEnd(TextView view){
-        view.setText("");
-        reuseTextView(view);
+        if (view != null) {
+            view.setText("");
+            reuseTextView(view);
+        }
     }
 
     private void onMoveUpEnd(TextView view){

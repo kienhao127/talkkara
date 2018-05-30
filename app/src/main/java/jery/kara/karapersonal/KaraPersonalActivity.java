@@ -27,12 +27,14 @@ public class KaraPersonalActivity extends AppCompatActivity {
     private DonutProgress beatProgress;
     private LyricView lyricView;
 
+    private KaraPersonalManager karaPersonalManager;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_kara_personal);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        karaPersonalManager = new KaraPersonalManager();
         init();
     }
 
@@ -41,7 +43,6 @@ public class KaraPersonalActivity extends AppCompatActivity {
         karaBtn = (ImageView) findViewById(R.id.karaBtn);
         lyricView = (LyricView) findViewById(R.id.lyricView);
 
-        final KaraPersonalManager karaPersonalManager = KaraPersonalManager.getInstance();
         karaPersonalManager.setOnStateChangeLister(new KaraPersonalManager.OnStateChangeListener() {
             @Override
             public void onStateChange(int state) {
@@ -93,8 +94,8 @@ public class KaraPersonalActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        KaraPersonalManager.getInstance().onActionStopSong();
-        KaraPersonalManager.getInstance().deleteAllFile();
-        KaraPersonalManager.getInstance().cancelDownload();
+        karaPersonalManager.onActionStopSong();
+        karaPersonalManager.deleteAllFile();
+        karaPersonalManager.cancelDownload();
     }
 }

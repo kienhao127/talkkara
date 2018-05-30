@@ -1,6 +1,7 @@
 package jery.kara.karaqueue;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
@@ -24,7 +25,7 @@ public class KaraQueueActivity extends AppCompatActivity {
     static final int STATE_SINGER_LOADING = 1;
     static final int STATE_SINGING = 2;
 
-    int state = STATE_SINGER_LOADING;
+    int state = STATE_SINGING;
 
     PulsatorLayout pulsatorLayout;
     LyricView lyricView;
@@ -58,7 +59,6 @@ public class KaraQueueActivity extends AppCompatActivity {
         currentUser.role = User.ROLE_USER;
 
         KaraQueueManager.getInstance().setCurrentUser(currentUser);
-        KaraQueueManager.getInstance().setBtnOpenQueue(btnOpenQueue);
         KaraQueueManager.getInstance().setOnStateChangeListener(new KaraQueueManager.OnStateChangeListener() {
             @Override
             public void onStateChange(int state) {
@@ -79,7 +79,6 @@ public class KaraQueueActivity extends AppCompatActivity {
                 karaQueueDialog.show(getFragmentManager(), "karaQueueDialog");
             }
         });
-        btnOpenQueue.setQueueSize(queueData.size());
 
         img_setting.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,7 +102,6 @@ public class KaraQueueActivity extends AppCompatActivity {
             pulsatorLayout.setVisibility(View.INVISIBLE);
         } else {
             switch (currentUserType) {
-                case User.TYPE_BANNED:
                 case User.TYPE_VIWER:
                 case User.TYPE_WAITTING:
                     wattingSingerLayout.setVisibility(View.INVISIBLE);
@@ -122,6 +120,7 @@ public class KaraQueueActivity extends AppCompatActivity {
     void init(){
         btnOpenQueue = (ButtonOpenQueue) findViewById(R.id.btn_open_queue);
         lyricView = (LyricView) findViewById(R.id.lyricView);
+
         pulsatorLayout = (PulsatorLayout) findViewById(R.id.pulsator);
         pulsatorLayout.setAvatarUrl("https://www.sideshowtoy.com/wp-content/uploads/2018/04/marvel-avengers-infinity-war-thanos-sixth-scale-figure-hot-toys-feature-903429-1.jpg");
         pulsatorLayout.startEffect();
@@ -132,6 +131,25 @@ public class KaraQueueActivity extends AppCompatActivity {
         lyricLayout = (RelativeLayout) findViewById(R.id.lyric_layout);
     }
 
+    Handler handler = new Handler();
+    private Runnable runnableCode = new Runnable() {
+        int i = 1;
+        @Override
+        public void run() {
+            if (i < 30) {
+                QueueItem u = new QueueItem();
+                u.userId = i;
+                u.username = "Ca sĩ đang đợi " + i;
+                u.songName = "Bài hát đang đợi " + i;
+                queueData.add(u);
+                i++;
+                KaraQueueManager.getInstance().setQueueData(queueData);
+                btnOpenQueue.setQueueSize(queueData.size());
+                handler.postDelayed(runnableCode, 5000);
+            }
+        }
+    };
+
     void loadData(){
         QueueItem u = new QueueItem();
         u.userId = 0;
@@ -139,13 +157,7 @@ public class KaraQueueActivity extends AppCompatActivity {
         u.songName = "Bài hát ca sĩ đang hát";
         queueData.add(u);
 
-        for (int i = 1; i < 10; i++){
-            u = new QueueItem();
-            u.userId = i;
-            u.username = "Ca sĩ đang đợi " + i;
-            u.songName = "Bài hát đang đợi " + i;
-            queueData.add(u);
-        }
+        handler.post(runnableCode);
     }
 
     @Override
@@ -154,5 +166,7 @@ public class KaraQueueActivity extends AppCompatActivity {
         KaraQueueManager.getInstance().onActionStopSong();
         KaraQueueManager.getInstance().deleteAllFile();
         KaraQueueManager.getInstance().cancelDownload();
+        handler.removeCallbacks(runnableCode);
+        handler = null;
     }
 }

@@ -35,7 +35,7 @@ public class KaraQueueDialog extends DialogFragment {
     private TextView btnChooseSong;
     private RecyclerView karaQueue;
     private QueueAdapter adapter;
-    private List<QueueItem> queueData = new ArrayList<>();
+    private List<QueueItem> mQueueData = new ArrayList<>();
     private TextView lbl_listQueue;
     private User currentUser = new User();
     private TextView lbl_loadingQueue;
@@ -53,7 +53,7 @@ public class KaraQueueDialog extends DialogFragment {
         a.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, getScreenHeight()*3/4);
         a.setCanceledOnTouchOutside(true);
 
-        queueData = KaraQueueManager.getInstance().getQueueData();
+        mQueueData = KaraQueueManager.getInstance().getQueueData();
         currentUser = KaraQueueManager.getInstance().getCurrentUser();
         init(view);
 
@@ -62,9 +62,9 @@ public class KaraQueueDialog extends DialogFragment {
         //Update Queue
         KaraQueueManager.getInstance().setOnQueueChangeListener(new KaraQueueManager.OnQueueChangeListener() {
             @Override
-            public void onQueueChange() {
+            public void onQueueChange(List<QueueItem> queueData) {
+                mQueueData = queueData;
                 adapter.notifyDataSetChanged();
-                karaQueue.scheduleLayoutAnimation();
                 updateQueueSize(queueData.size());
             }
         });
@@ -81,7 +81,7 @@ public class KaraQueueDialog extends DialogFragment {
         int resId = R.anim.layout_anim_fall_down;
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getActivity().getApplicationContext(), resId);
         karaQueue.setLayoutAnimation(animation);
-        adapter = new QueueAdapter((AppCompatActivity) getActivity(), queueData);
+        adapter = new QueueAdapter((AppCompatActivity) getActivity(), mQueueData);
         karaQueue.setAdapter(adapter);
 
         btnChooseSong.setOnClickListener(new View.OnClickListener() {
@@ -99,14 +99,14 @@ public class KaraQueueDialog extends DialogFragment {
     private void init(View view) {
         lbl_loadingQueue = (TextView) view.findViewById(R.id.loading_queue);
         lbl_listQueue = (TextView) view.findViewById(R.id.lbl_listQueue);
-        updateQueueSize(queueData.size());
+        updateQueueSize(mQueueData.size());
         btnChooseSong = (TextView) view.findViewById(R.id.lbl_chooseSong);
         karaQueue = view.findViewById(R.id.karaQueue);
     }
 
     private void updateQueueSize(int size){
         lbl_listQueue.setText("Lượt cầm mic (" + size + ")");
-        if (queueData == null || queueData.size() == 0){
+        if (mQueueData == null || mQueueData.size() == 0){
             lbl_loadingQueue.setVisibility(View.VISIBLE);
         } else {
             lbl_loadingQueue.setVisibility(View.INVISIBLE);

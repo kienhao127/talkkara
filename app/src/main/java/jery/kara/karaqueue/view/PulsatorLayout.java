@@ -102,11 +102,11 @@ public class PulsatorLayout extends RelativeLayout {
         img_avatar = (ImageView) view.findViewById(R.id.user_avatar);
         List<Animator> animators = new ArrayList<>();
 
-        ObjectAnimator scaleXAnimator = ObjectAnimator.ofFloat(img_avatar, "ScaleX", 0f, 1f);
+        ObjectAnimator scaleXAnimator = ObjectAnimator.ofFloat(img_avatar, "ScaleX", 0.3f, 1f);
         scaleXAnimator.setStartDelay(0);
         animators.add(scaleXAnimator);
 
-        ObjectAnimator scaleYAnimator = ObjectAnimator.ofFloat(img_avatar, "ScaleY", 0f, 1f);
+        ObjectAnimator scaleYAnimator = ObjectAnimator.ofFloat(img_avatar, "ScaleY", 0.3f, 1f);
         scaleYAnimator.setStartDelay(0);
         animators.add(scaleYAnimator);
 
@@ -114,13 +114,6 @@ public class PulsatorLayout extends RelativeLayout {
         mAvatarAnimatorSet.playTogether(animators);
         mAvatarAnimatorSet.setInterpolator(new LinearInterpolator());
         mAvatarAnimatorSet.setDuration(500);
-    }
-
-    /**
-     * Satrt image animation
-     */
-
-    public void startAvatarAnim(){
         mAvatarAnimatorSet.start();
     }
 
@@ -311,6 +304,7 @@ public class PulsatorLayout extends RelativeLayout {
         mAnimatorSet.playTogether(animators);
         mAnimatorSet.setInterpolator(new LinearInterpolator());
         mAnimatorSet.setDuration(mDuration);
+        mAnimatorSet.setStartDelay(500);
         mAnimatorSet.addListener(mAnimatorListener);
     }
 
